@@ -13,13 +13,13 @@ datasource db {
 model Subject {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   text        String
-  question    Question?
+  question    Question[]
 }
 
 model Question {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   subject     Subject   @relation(fields: [subjectId], references: [id])
-  subjectId   String    @unique @db.ObjectId
+  subjectId   String    @db.ObjectId
   text        String
   level       Int
 }
