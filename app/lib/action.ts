@@ -132,3 +132,7 @@ export async function deleteQuestion(questionId: string) {
     };
   }
 }
+
+
+export async function updatePersonnel(id: string, formData: FormData) {}
+export async function deletePersonnel(id: string) {}
