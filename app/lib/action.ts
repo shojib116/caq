@@ -74,12 +74,11 @@ const QuestionSchema = z.object({
   level: z.coerce.number(),
 });
 
-export async function addQuestion(subjectId: string, formData: FormData) {
-  const { question, level } = QuestionSchema.parse({
-    question: formData.get("question"),
-    level: formData.get("level"),
-  });
-
+export async function addQuestion(
+  subjectId: string,
+  question: string,
+  level: number
+) {
   try {
     const response = await prisma.question.create({
       data: {
@@ -132,7 +131,6 @@ export async function deleteQuestion(questionId: string) {
     };
   }
 }
-
 
 export async function updatePersonnel(id: string, formData: FormData) {}
 export async function deletePersonnel(id: string) {}

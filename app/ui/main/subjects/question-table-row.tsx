@@ -81,6 +81,7 @@ function QuestionEditForm({
   setNewLevel: (level: number) => void;
 }) {
   const handleSubmit = () => {
+    if (!newQuestion) return;
     updateQuestion(question.id, newQuestion, newLevel);
     setEditFormStatus(false);
   };

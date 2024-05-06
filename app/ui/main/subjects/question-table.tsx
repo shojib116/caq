@@ -34,10 +34,14 @@ export default function QuestionTable({
           ) : (
             <table className="bg-white w-full rounded">
               <thead className="w-full">
-                <th className="p-2 w-6">Sl</th>
-                <th className="text-left p-2">Subject</th>
-                <th className="p-2 w-16">Level</th>
-                <th className="text-right p-2 pr-3 w-28">Edit</th>
+                <tr>
+                  <th className="p-2 w-1/12 font-medium">Sl</th>
+                  <th className="text-left p-2 font-medium">Subject</th>
+                  <th className="p-2 w-1/12 font-medium">Level</th>
+                  <th className="text-right p-2 pr-3 w-1/12 font-medium">
+                    Edit
+                  </th>
+                </tr>
               </thead>
 
               <tbody>
@@ -52,15 +56,17 @@ export default function QuestionTable({
                   );
                 })}
               </tbody>
+              <tfoot>
+                {showAddQuestionForm && (
+                  <AddQuestionForm
+                    subject={subject}
+                    questionFormStatus={setShowAddQuestionForm}
+                  />
+                )}
+              </tfoot>
             </table>
           )}
         </div>
-        {showAddQuestionForm && (
-          <AddQuestionForm
-            subject={subject}
-            questionFormStatus={setShowAddQuestionForm}
-          />
-        )}
       </div>
     </div>
   );
