@@ -27,23 +27,27 @@ export default function QuestionTable({
           </button>
         </div>
         <div>
-          {subject.question?.length === 0 ? (
-            <p className="flex justify-center font-semibold">
-              No questions for this subject yet.
-            </p>
-          ) : (
-            <table className="bg-white w-full rounded">
-              <thead className="w-full">
-                <tr>
-                  <th className="p-2 w-1/12 font-medium">Sl</th>
-                  <th className="text-left p-2 font-medium">Subject</th>
-                  <th className="p-2 w-1/12 font-medium">Level</th>
-                  <th className="text-right p-2 pr-3 w-1/12 font-medium">
-                    Edit
-                  </th>
-                </tr>
-              </thead>
+          <table className="bg-white w-full rounded">
+            <thead className="w-full">
+              <tr>
+                <th className="p-2 w-1/12 font-medium">Sl</th>
+                <th className="text-left p-2 font-medium">Subject</th>
+                <th className="p-2 w-1/12 font-medium">Level</th>
+                <th className="text-right p-2 pr-3 w-1/12 font-medium">Edit</th>
+              </tr>
+            </thead>
 
+            {subject.question?.length === 0 ? (
+              <tbody>
+                <tr>
+                  <td colSpan={4}>
+                    <p className="flex justify-center font-semibold">
+                      No questions for this subject yet.
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            ) : (
               <tbody>
                 {subject.question.map((question) => {
                   index++;
@@ -56,16 +60,16 @@ export default function QuestionTable({
                   );
                 })}
               </tbody>
-              <tfoot>
-                {showAddQuestionForm && (
-                  <AddQuestionForm
-                    subject={subject}
-                    questionFormStatus={setShowAddQuestionForm}
-                  />
-                )}
-              </tfoot>
-            </table>
-          )}
+            )}
+            <tfoot>
+              {showAddQuestionForm && (
+                <AddQuestionForm
+                  subject={subject}
+                  questionFormStatus={setShowAddQuestionForm}
+                />
+              )}
+            </tfoot>
+          </table>
         </div>
       </div>
     </div>
