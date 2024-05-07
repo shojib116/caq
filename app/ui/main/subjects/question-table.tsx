@@ -16,7 +16,7 @@ export default function QuestionTable({
   let index = 0;
   return (
     <div className=" bg-white py-2 px-4 rounded-br rounded-bl">
-      <div className="bg-gray-100 flex flex-col gap-4 px-10 py-4 rounded">
+      <div className="bg-gray-100 flex flex-col gap-4 p-4 rounded">
         <div className="flex justify-end">
           <button
             className="flex h-10 items-center rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
