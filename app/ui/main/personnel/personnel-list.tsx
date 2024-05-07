@@ -1,6 +1,10 @@
 import PersonnelListItem from "./personnel-list-item";
 
-const data = [{designation:"Aircraft Mechanic", id:"kdfjkds"}, {designation: "Shop Personnel", id:"kdfjkdc"}, {designation:"Aircraft Engineer", id:"kdfjkde"},]
+const data = [
+  { designation: "Aircraft Mechanic", id: "kdfjkds" },
+  { designation: "Shop Personnel", id: "kdfjkdc" },
+  { designation: "Aircraft Engineer", id: "kdfjkde" },
+];
 
 export default async function PersonnelList() {
   let index = 0;
@@ -9,7 +13,11 @@ export default async function PersonnelList() {
       {data.map((personnel) => {
         index++;
         return (
-          <PersonnelListItem index={index} personnel={personnel} key={personnel.id} />
+          <PersonnelListItem
+            index={index}
+            personnel={personnel}
+            key={personnel.id}
+          />
         );
       })}
     </div>
