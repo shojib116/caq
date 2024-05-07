@@ -64,17 +64,12 @@ export default function SubjectListItem({
           </>
         )}
         {editSubject && (
-          <EditForm
-            subject={subject}
-            setEditStatus={SetEditSubject}
-            setShowQuestions={setShowQuestions}
-          />
+          <EditForm subject={subject} setEditStatus={SetEditSubject} />
         )}
         {deleteSubject && (
           <DeleteConfrimation
             subject={subject}
             setDeleteStatus={SetDeleteSubject}
-            setShowQuestions={setShowQuestions}
           />
         )}
       </tr>
@@ -86,11 +81,9 @@ export default function SubjectListItem({
 function EditForm({
   subject,
   setEditStatus,
-  setShowQuestions,
 }: {
   subject: Subject;
   setEditStatus: (status: boolean) => void;
-  setShowQuestions: (status: boolean) => void;
 }) {
   const [newSubject, setNewSubject] = useState<string>(subject.text);
   const updateSubjectWithId = updateSubject.bind(null, subject.id);
@@ -100,7 +93,6 @@ function EditForm({
       updateSubjectWithId(newSubject);
     }
     setEditStatus(false);
-    setShowQuestions(false);
   };
   return (
     <>
@@ -123,7 +115,6 @@ function EditForm({
           type="button"
           onClick={(e) => {
             setEditStatus(false);
-            setShowQuestions(false);
           }}
         >
           <XMarkIcon className="w-4 h-4 text-red-500" />
@@ -136,11 +127,9 @@ function EditForm({
 function DeleteConfrimation({
   subject,
   setDeleteStatus,
-  setShowQuestions,
 }: {
   subject: Subject;
   setDeleteStatus: (status: boolean) => void;
-  setShowQuestions: (status: boolean) => void;
 }) {
   const deleteSubjectWithId = deleteSubject.bind(null, subject.id);
   return (
@@ -153,7 +142,6 @@ function DeleteConfrimation({
           type="submit"
           onClick={(e) => {
             deleteSubjectWithId();
-            setShowQuestions(false);
           }}
         >
           <CheckIcon className="w-4 h-4 text-red-500" />
@@ -162,7 +150,6 @@ function DeleteConfrimation({
           type="button"
           onClick={(e) => {
             setDeleteStatus(false);
-            setShowQuestions(false);
           }}
         >
           <XMarkIcon className="w-4 h-4 text-green-500" />
