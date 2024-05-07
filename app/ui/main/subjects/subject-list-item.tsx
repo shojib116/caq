@@ -25,45 +25,29 @@ export default function SubjectListItem({
   const [deleteSubject, SetDeleteSubject] = useState<boolean>(false);
   const [showQuestions, setShowQuestions] = useState<boolean>(false);
   return (
-    <div>
-      <div className="flex justify-between items-center bg-white p-4 rounded">
-        {!deleteSubject ? (
+    <>
+      <tr className="flex flex-row px-4 py-1 bg-white m-2 rounded-lg">
+        <td
+          className="cursor-pointer p-2 w-1/12 text-center justify-center flex gap-2 items-center"
+          onClick={(e) => setShowQuestions(!showQuestions)}
+        >
+          {!showQuestions ? (
+            <ChevronRightIcon className="w-4 h-4" />
+          ) : (
+            <ChevronDownIcon className="w-4 h-4" />
+          )}
+          {index}.{" "}
+        </td>
+        {!editSubject && !deleteSubject && (
           <>
-            <div className="flex grow w-max gap-4 items-center">
-              {!showQuestions ? (
-                <ChevronRightIcon
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={(e) => setShowQuestions(!showQuestions)}
-                />
-              ) : (
-                <ChevronDownIcon
-                  className="w-4 h-4 cursor-pointer"
-                  onClick={(e) => setShowQuestions(!showQuestions)}
-                />
-              )}
-              <span
-                className="w-4 cursor-pointer"
-                onClick={(e) => setShowQuestions(!showQuestions)}
-              >
-                {index}.
-              </span>
-              {!editSubject ? (
-                <p
-                  className="cursor-pointer"
-                  onClick={(e) => setShowQuestions(!showQuestions)}
-                >
-                  {subject.text}
-                </p>
-              ) : (
-                <EditForm
-                  subject={subject}
-                  setEditStatus={SetEditSubject}
-                  setShowQuestions={setShowQuestions}
-                />
-              )}
-            </div>
-            <div className="flex gap-2">
-              {!editSubject && (
+            <td
+              className="cursor-pointer p-2 w-10/12"
+              onClick={(e) => setShowQuestions(!showQuestions)}
+            >
+              {subject.text}
+            </td>
+            <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
+              {!showQuestions && (
                 <>
                   <EditButton
                     editStatus={editSubject}
@@ -76,20 +60,26 @@ export default function SubjectListItem({
                   />
                 </>
               )}
-            </div>
+            </td>
           </>
-        ) : (
+        )}
+        {editSubject && (
+          <EditForm
+            subject={subject}
+            setEditStatus={SetEditSubject}
+            setShowQuestions={setShowQuestions}
+          />
+        )}
+        {deleteSubject && (
           <DeleteConfrimation
             subject={subject}
             setDeleteStatus={SetDeleteSubject}
             setShowQuestions={setShowQuestions}
           />
         )}
-      </div>
-      {showQuestions && !editSubject && !deleteSubject && (
-        <QuestionTable subject={subject} />
-      )}
-    </div>
+      </tr>
+      {showQuestions && <QuestionTable subject={subject} />}
+    </>
   );
 }
 
@@ -102,35 +92,44 @@ function EditForm({
   setEditStatus: (status: boolean) => void;
   setShowQuestions: (status: boolean) => void;
 }) {
+  const [newSubject, setNewSubject] = useState<string>(subject.text);
   const updateSubjectWithId = updateSubject.bind(null, subject.id);
-  const handleSubmit = (formData: FormData) => {
-    updateSubjectWithId(formData);
+  const handleSubmit = () => {
+    if (!newSubject) return;
+    if (newSubject !== subject.text) {
+      updateSubjectWithId(newSubject);
+    }
     setEditStatus(false);
     setShowQuestions(false);
   };
   return (
-    <form action={handleSubmit} className="flex gap-2">
-      <input
-        type="text"
-        id="subject"
-        name="subject"
-        defaultValue={subject.text}
-        required
-        className="md:w-[40rem] w-96 border px-2 rounded border-gray-200 focus:border-blue-200"
-      />
-      <button type="submit">
-        <CheckIcon className="w-4 h-4 text-green-500" />
-      </button>
-      <button
-        type="button"
-        onClick={(e) => {
-          setEditStatus(false);
-          setShowQuestions(false);
-        }}
-      >
-        <XMarkIcon className="w-4 h-4 text-red-500" />
-      </button>
-    </form>
+    <>
+      <td className="cursor-pointer p-2 w-10/12">
+        <input
+          type="text"
+          id="subject"
+          name="subject"
+          defaultValue={subject.text}
+          onChange={(e) => setNewSubject(e.target.value)}
+          required
+          className="w-full border px-2 rounded border-gray-200 focus:border-blue-200"
+        />
+      </td>
+      <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
+        <button type="button" onClick={handleSubmit}>
+          <CheckIcon className="w-4 h-4 text-green-500" />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            setEditStatus(false);
+            setShowQuestions(false);
+          }}
+        >
+          <XMarkIcon className="w-4 h-4 text-red-500" />
+        </button>
+      </td>
+    </>
   );
 }
 
@@ -145,27 +144,31 @@ function DeleteConfrimation({
 }) {
   const deleteSubjectWithId = deleteSubject.bind(null, subject.id);
   return (
-    <div className="flex gap-3 text-red-500">
-      <p>Are you absolutely sure you want to delete this subject?</p>
-      <button
-        type="submit"
-        onClick={(e) => {
-          deleteSubjectWithId();
-          setShowQuestions(false);
-        }}
-      >
-        <CheckIcon className="w-4 h-4 text-red-500" />
-      </button>
-      <button
-        type="button"
-        onClick={(e) => {
-          setDeleteStatus(false);
-          setShowQuestions(false);
-        }}
-      >
-        <XMarkIcon className="w-4 h-4 text-green-500" />
-      </button>
-    </div>
+    <>
+      <td className="cursor-pointer p-2 w-10/12 text-red-500">
+        Are you absolutely sure you want to delete this subject?
+      </td>
+      <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
+        <button
+          type="submit"
+          onClick={(e) => {
+            deleteSubjectWithId();
+            setShowQuestions(false);
+          }}
+        >
+          <CheckIcon className="w-4 h-4 text-red-500" />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            setDeleteStatus(false);
+            setShowQuestions(false);
+          }}
+        >
+          <XMarkIcon className="w-4 h-4 text-green-500" />
+        </button>
+      </td>
+    </>
   );
 }
 

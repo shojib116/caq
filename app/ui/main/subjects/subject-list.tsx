@@ -17,13 +17,15 @@ export default async function SubjectList({
   );
   let index = (currentPage - 1) * showCount;
   return (
-    <div className="my-4 bg-gray-100 rounded-xl p-2 flex flex-col gap-2">
-      {data.map((subject) => {
-        index++;
-        return (
-          <SubjectListItem index={index} subject={subject} key={subject.id} />
-        );
-      })}
-    </div>
+    <table className="my-4 border-collapse bg-gray-100 rounded-xl p-2 table-fixed w-full">
+      <tbody>
+        {data.map((subject) => {
+          index++;
+          return (
+            <SubjectListItem index={index} subject={subject} key={subject.id} />
+          );
+        })}
+      </tbody>
+    </table>
   );
 }

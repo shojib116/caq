@@ -30,11 +30,7 @@ export async function addSubject(formData: FormData) {
   redirect("/subjects");
 }
 
-export async function updateSubject(id: string, formData: FormData) {
-  const { subject } = SubjectSchema.parse({
-    subject: formData.get("subject"),
-  });
-
+export async function updateSubject(id: string, subject: string) {
   try {
     await prisma.subject.update({
       where: {
