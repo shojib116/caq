@@ -20,6 +20,14 @@ model Question {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   subject     Subject   @relation(fields: [subjectId], references: [id])
   subjectId   String    @db.ObjectId
+  personnel   Personnel @relation(fields: [personnelId], references: [id])
+  personnelId String[]  @db.ObjectId
   text        String
   level       Int
+}
+
+model Personnel {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  designation String      @unique
+  question     Question[]
 }
