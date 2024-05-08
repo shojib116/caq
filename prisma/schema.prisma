@@ -13,21 +13,22 @@ datasource db {
 model Subject {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   text        String
-  question    Question[]
+  questions    Question[]
 }
 
 model Question {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  subject     Subject   @relation(fields: [subjectId], references: [id])
-  subjectId   String    @db.ObjectId
-  personnel   Personnel @relation(fields: [personnelId], references: [id])
-  personnelId String[]  @db.ObjectId
-  text        String
-  level       Int
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  subject       Subject       @relation(fields: [subjectID], references: [id])
+  subjectID     String        @db.ObjectId
+  personnels    Personnel[]   @relation(fields: [personnelIDs], references: [id])
+  personnelIDs  String[]      @db.ObjectId
+  text          String
+  level         Int
 }
 
 model Personnel {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
   designation String      @unique
-  question     Question[]
+  questions   Question[]  @relation(fields: [questionIDs], references: [id])
+  questionIDs String[]    @db.ObjectId
 }

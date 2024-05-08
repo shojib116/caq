@@ -78,7 +78,7 @@ export async function addQuestion(
   try {
     const response = await prisma.question.create({
       data: {
-        subjectId: subjectId,
+        subjectID: subjectId,
         text: question,
         level: level,
       },

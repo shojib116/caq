@@ -25,7 +25,7 @@ export async function fetchSubjectsPagination(
       skip,
       take,
       include: {
-        question: true,
+        questions: true,
       },
     });
 
