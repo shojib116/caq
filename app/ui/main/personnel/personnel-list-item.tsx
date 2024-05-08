@@ -26,43 +26,36 @@ export default function PersonnelListItem({
   const [editPersonnel, SetEditPersonnel] = useState<boolean>(false);
   const [deletePersonnel, SetDeletePersonnel] = useState<boolean>(false);
   return (
-    <div>
-      <div className="flex gap-2 justify-between items-center bg-white p-4 rounded">
-        {!deletePersonnel ? (
+    <>
+      <tr className="flex flex-row px-4 py-1 bg-white m-2 rounded-lg">
+        <td className="cursor-pointer p-2 w-1/12 text-center justify-center flex gap-2 items-center">
+          {index}.{" "}
+        </td>
+        {!editPersonnel && !deletePersonnel && (
           <>
-            <div className="flex grow w-max gap-4 items-center">
-              {index}.{" "}
-              {!editPersonnel ? (
-                <p className="cursor-pointer text-left">
-                  {personnel.designation}
-                </p>
-              ) : (
-                <EditForm
-                  personnel={personnel}
-                  setEditStatus={SetEditPersonnel}
-                />
-              )}
-            </div>
-            <div className="flex gap-2">
-              {!editPersonnel && (
-                <>
-                  <EditButton
-                    editStatus={editPersonnel}
-                    setEditStatus={SetEditPersonnel}
-                  />
-                  <DeleteButton setDeleteStatus={SetDeletePersonnel} />
-                </>
-              )}
-            </div>
+            <td className="cursor-pointer p-2 w-10/12">
+              {personnel.designation}
+            </td>
+            <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
+              <EditButton
+                editStatus={editPersonnel}
+                setEditStatus={SetEditPersonnel}
+              />
+              <DeleteButton setDeleteStatus={SetDeletePersonnel} />
+            </td>
           </>
-        ) : (
+        )}
+        {editPersonnel && (
+          <EditForm personnel={personnel} setEditStatus={SetEditPersonnel} />
+        )}
+        {deletePersonnel && (
           <DeleteConfrimation
             personnel={personnel}
             setDeleteStatus={SetDeletePersonnel}
           />
         )}
-      </div>
-    </div>
+      </tr>
+    </>
   );
 }
 
@@ -73,37 +66,44 @@ function EditForm({
   personnel: Personnel;
   setEditStatus: (status: boolean) => void;
 }) {
-  const updatePersonnelWithId = updatePersonnel.bind(null, personnel.id);
-  const handleSubmit = (formData: FormData) => {
-    updatePersonnelWithId(formData);
+  const [newDesignation, setNewDesignation] = useState<string>(
+    personnel.designation
+  );
+  const updatePersonneltWithId = updatePersonnel.bind(null, personnel.id);
+  const handleSubmit = () => {
+    if (!newDesignation) return;
+    if (newDesignation !== personnel.designation) {
+      updatePersonneltWithId(newDesignation);
+    }
     setEditStatus(false);
   };
   return (
-    <form action={handleSubmit} className="flex gap-2">
-      <input
-        type="text"
-        id="personnel"
-        name="personnel"
-        defaultValue={personnel.designation}
-        required
-        className="md:w-[40rem] w-96 border px-2 rounded border-gray-200 focus:border-blue-200"
-      />
-      <button
-        type="submit"
-        className="border border-black px-2 rounded text-sm font-semibold bg-green-600 text-white"
-      >
-        Save
-      </button>
-      <button
-        type="button"
-        onClick={(e) => {
-          setEditStatus(false);
-        }}
-        className="border border-black px-2 rounded text-sm font-semibold bg-red-600 text-white"
-      >
-        Cancel
-      </button>
-    </form>
+    <>
+      <td className="cursor-pointer p-2 w-10/12">
+        <input
+          type="text"
+          id="subject"
+          name="subject"
+          defaultValue={personnel.designation}
+          onChange={(e) => setNewDesignation(e.target.value)}
+          required
+          className="w-full border px-2 rounded border-gray-200 focus:border-blue-200"
+        />
+      </td>
+      <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
+        <button type="button" onClick={handleSubmit}>
+          <CheckIcon className="w-4 h-4 text-green-500" />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            setEditStatus(false);
+          }}
+        >
+          <XMarkIcon className="w-4 h-4 text-red-500" />
+        </button>
+      </td>
+    </>
   );
 }
 
@@ -116,27 +116,29 @@ function DeleteConfrimation({
 }) {
   const deletePersonnelWithId = deletePersonnel.bind(null, personnel.id);
   return (
-    <div className="flex gap-3 text-red-500">
-      <p>Are you absolutely sure you want to delete this personnel?</p>
-      <button
-        type="submit"
-        onClick={(e) => {
-          deletePersonnelWithId();
-        }}
-        className="border border-black px-2 rounded text-sm font-semibold bg-red-600 text-white"
-      >
-        Yes
-      </button>
-      <button
-        type="button"
-        onClick={(e) => {
-          setDeleteStatus(false);
-        }}
-        className="border border-black px-2 rounded text-sm font-semibold bg-green-600 text-white"
-      >
-        No
-      </button>
-    </div>
+    <>
+      <td className="cursor-pointer p-2 w-10/12 text-red-500">
+        Are you absolutely sure you want to delete this subject?
+      </td>
+      <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
+        <button
+          type="submit"
+          onClick={(e) => {
+            deletePersonnelWithId();
+          }}
+        >
+          <CheckIcon className="w-4 h-4 text-red-500" />
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            setDeleteStatus(false);
+          }}
+        >
+          <XMarkIcon className="w-4 h-4 text-green-500" />
+        </button>
+      </td>
+    </>
   );
 }
 

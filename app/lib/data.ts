@@ -47,3 +47,15 @@ export async function fetchSubjectCount() {
     throw new Error("Failed to fetch subjects");
   }
 }
+
+export async function fetchPersonnel() {
+  noStore();
+  try {
+    const data = await prisma.personnel.findMany();
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch subjects");
+  }
+}

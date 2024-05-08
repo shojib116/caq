@@ -1,25 +1,32 @@
+import { fetchPersonnel } from "@/app/lib/data";
 import PersonnelListItem from "./personnel-list-item";
-
-const data = [
-  { designation: "Aircraft Mechanic", id: "kdfjkds" },
-  { designation: "Shop Personnel", id: "kdfjkdc" },
-  { designation: "Aircraft Engineer", id: "kdfjkde" },
-];
+import { Personnel } from "@prisma/client";
 
 export default async function PersonnelList() {
   let index = 0;
+  const data: Personnel[] | null = await fetchPersonnel();
+
   return (
-    <div className="my-4 bg-gray-100 rounded-xl p-2 flex flex-col gap-2">
-      {data.map((personnel) => {
-        index++;
-        return (
-          <PersonnelListItem
-            index={index}
-            personnel={personnel}
-            key={personnel.id}
-          />
-        );
-      })}
-    </div>
+    <table className="my-4 bg-gray-100 rounded-xl p-2 w-full">
+      <tbody>
+        {data.length === 0 && (
+          <tr>
+            <td className="w-full text-center text-sm font-semibold py-4">
+              Empty Personnel List
+            </td>
+          </tr>
+        )}
+        {data.map((personnel) => {
+          index++;
+          return (
+            <PersonnelListItem
+              index={index}
+              personnel={personnel}
+              key={personnel.id}
+            />
+          );
+        })}
+      </tbody>
+    </table>
   );
 }

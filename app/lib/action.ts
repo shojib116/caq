@@ -128,5 +128,52 @@ export async function deleteQuestion(questionId: string) {
   }
 }
 
-export async function updatePersonnel(id: string, formData: FormData) {}
-export async function deletePersonnel(id: string) {}
+export async function addPersonnel(designation: string) {
+  try {
+    await prisma.personnel.create({
+      data: {
+        designation,
+      },
+    });
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to add Personnel.",
+    };
+  }
+
+  revalidatePath("/personnel");
+}
+
+export async function updatePersonnel(
+  personnelId: string,
+  designation: string
+) {
+  try {
+    await prisma.personnel.update({
+      where: { id: personnelId },
+      data: {
+        designation,
+      },
+    });
+
+    revalidatePath("/personnel");
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to update personnel designation",
+    };
+  }
+}
+
+export async function deletePersonnel(personnelId: string) {
+  try {
+    await prisma.personnel.delete({
+      where: { id: personnelId },
+    });
+
+    revalidatePath("/personnel");
+  } catch (error) {
+    return {
+      message: "Database Error: Failed to delete personnel",
+    };
+  }
+}
