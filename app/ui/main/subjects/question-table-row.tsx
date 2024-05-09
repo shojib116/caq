@@ -6,16 +6,22 @@ import {
   PencilIcon,
   TrashIcon,
   XMarkIcon,
+  InformationCircleIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import { Question } from "@prisma/client";
+import { Personnel, Question } from "@prisma/client";
 import { deleteQuestion, updateQuestion } from "@/app/lib/action";
+import PersonnelCheckbox from "./personnel-checkbox";
+import { CheckedItems } from "@/app/lib/definitions";
 
 export default function QuestionTableRow({
   question,
   index,
+  personnelData,
 }: {
   question: Question;
   index: string;
+  personnelData: Personnel[];
 }) {
   const [showQuestionEditForm, setShowQuestionEditForm] =
     useState<boolean>(false);
@@ -24,6 +30,33 @@ export default function QuestionTableRow({
   const [newQuestion, setNewQuestion] = useState<string>(question.text);
   const [newLevel, setNewLevel] = useState<number>(question.level);
 
+  function getDesignations(personnelIDs: string[], personnelData: Personnel[]) {
+    // Create a map to store ID-designation mappings
+    const idToDesignation = new Map();
+    personnelData.forEach((entry) => {
+      idToDesignation.set(entry.id, entry.designation);
+    });
+
+    // Initialize an empty array to store designations
+    const designations: string[] = [];
+
+    // Iterate through personnelIDs and get the designation for each ID
+    personnelIDs.forEach((personnelID) => {
+      if (idToDesignation.has(personnelID)) {
+        designations.push(idToDesignation.get(personnelID));
+      } else {
+        // Handle the case where an ID is not found in personnelData
+        designations.push("Unknown");
+      }
+    });
+
+    return designations;
+  }
+
+  const personnels = getDesignations(question.personnelIDs, personnelData).join(
+    ", "
+  );
+
   return (
     <tr className="border-t">
       {!showQuestionEditForm && !showDeleteQuestionPrompt && (
@@ -31,6 +64,14 @@ export default function QuestionTableRow({
           <td className="p-2 text-center">{index}.</td>
           <td className="p-2">{question.text}</td>
           <td className="text-center p-2">{question.level}</td>
+          <td className="text-center p-2">
+            <div className="group relative inline-block">
+              <InformationCircleIcon className="w-5 h-5 text-blue-400 mx-auto cursor-pointer group relative inline-block" />
+              <span className="absolute hidden group-hover:flex -left-[5.35rem] -top-2 -translate-y-full w-48 px-2 py-1 bg-gray-700 rounded-lg text-center text-white text-sm after:content-[''] after:absolute after:left-1/2 after:top-[100%] after:-translate-x-1/2 after:border-8 after:border-x-transparent after:border-b-transparent after:border-t-gray-700">
+                {personnels}
+              </span>
+            </div>
+          </td>
           <td className="text-right p-2 flex justify-end gap-2">
             <button onClick={(e) => setShowQuestionEditForm(true)}>
               <PencilIcon className="w-4 h-4" />
@@ -45,6 +86,7 @@ export default function QuestionTableRow({
         <QuestionEditForm
           question={question}
           index={index}
+          personnelData={personnelData}
           setEditFormStatus={setShowQuestionEditForm}
           newQuestion={newQuestion}
           setNewQuestion={setNewQuestion}
@@ -66,6 +108,7 @@ export default function QuestionTableRow({
 function QuestionEditForm({
   question,
   index,
+  personnelData,
   setEditFormStatus,
   newQuestion,
   setNewQuestion,
@@ -74,15 +117,31 @@ function QuestionEditForm({
 }: {
   question: Question;
   index: string;
+  personnelData: Personnel[];
   setEditFormStatus: (status: boolean) => void;
   newQuestion: string;
   setNewQuestion: (question: string) => void;
   newLevel: number;
   setNewLevel: (level: number) => void;
 }) {
+  const [showCheckBox, setShowCheckBox] = useState<boolean>(false);
+  const [checkedItems, setCheckedItems] = useState<CheckedItems>(
+    personnelData.reduce(
+      (acc, item) => ({
+        ...acc,
+        [item.id]: question.personnelIDs.indexOf(item.id) === -1 ? false : true,
+      }),
+      {}
+    )
+  );
   const handleSubmit = () => {
-    if (!newQuestion) return;
-    updateQuestion(question.id, newQuestion, newLevel);
+    const personnelIDs = Object.keys(checkedItems);
+    const checkedPersonnelIDs = personnelIDs.filter(
+      (id) => checkedItems[id] === true
+    );
+
+    if (!newQuestion || !checkedPersonnelIDs.length) return;
+    updateQuestion(question.id, newQuestion, newLevel, checkedPersonnelIDs);
     setEditFormStatus(false);
   };
   return (
@@ -111,6 +170,23 @@ function QuestionEditForm({
           <option value="3">3</option>
         </select>
       </td>
+      <td className="text-center p-2 relative">
+        <span
+          onClick={(e) => {
+            setShowCheckBox(!showCheckBox);
+          }}
+          className="text-xs flex flex-row items-center gap-1 border rounded justify-center px-1"
+        >
+          Select Personnel <ChevronDownIcon className="w-3 h-3" />
+        </span>
+        {showCheckBox && (
+          <PersonnelCheckbox
+            checkedItems={checkedItems}
+            setCheckedItems={setCheckedItems}
+            personnelData={personnelData}
+          />
+        )}
+      </td>
       <td className="text-right p-2 flex justify-end gap-2">
         <button onClick={handleSubmit}>
           <CheckIcon className="w-4 h-4 text-green-500" />
@@ -134,11 +210,10 @@ function DeleteQuestionPrompt({
 }) {
   return (
     <>
-      <td className="p-2 tex-center">{index}.</td>
-      <td className="text-red-500 p-2 w-min">
+      <td className="p-2 text-center">{index}.</td>
+      <td className="text-red-500 p-2 w-min" colSpan={3}>
         Are you sure you want to delete this question?
       </td>
-      <td className="text-center p-2"></td>
       <td className="text-right p-2 flex justify-end gap-2">
         <button onClick={(e) => deleteQuestion(question.id)}>
           <CheckIcon className="w-4 h-4 text-red-500" />

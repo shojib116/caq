@@ -1,12 +1,16 @@
 export type ResponseSubject = {
-  question:
-    | {
-        id: string;
-        subjectId: string;
-        text: string;
-        level: number;
-      }[];
+  questions: {
+    id: string;
+    subjectID: string;
+    personnelIDs: string[];
+    text: string;
+    level: number;
+  }[];
 } & {
   id: string;
   text: string;
+};
+
+export type CheckedItems = {
+  [key: string]: boolean;
 };

@@ -5,20 +5,25 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import AddQuestionForm from "@/app/ui/main/subjects/add-question-form";
 import QuestionTableRow from "@/app/ui/main/subjects/question-table-row";
+import { Personnel } from "@prisma/client";
 
 export default function QuestionTable({
   subject,
+  personnelData,
 }: {
   subject: ResponseSubject;
+  personnelData: Personnel[];
 }) {
   const [showAddQuestionForm, setShowAddQuestionForm] =
     useState<boolean>(false);
   let index = 0;
+
   return (
-    <div className=" bg-white py-2 px-4 rounded-br rounded-bl">
-      <div className="bg-gray-100 flex flex-col gap-4 p-4 rounded">
+    <div className=" bg-white py-2 rounded-br rounded-bl">
+      <div className="bg-gray-100 flex flex-col gap-4 p-4">
         <div className="flex justify-end">
           <button
+            type="button"
             className="flex h-10 items-center rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
             onClick={(e) => setShowAddQuestionForm(true)}
           >
@@ -27,20 +32,21 @@ export default function QuestionTable({
           </button>
         </div>
         <div>
-          <table className="bg-white w-full rounded">
+          <table className="bg-white w-full rounded text-sm">
             <thead className="w-full">
               <tr>
                 <th className="p-2 w-1/12 font-medium">Sl</th>
                 <th className="text-left p-2 font-medium">Question</th>
                 <th className="p-2 w-1/12 font-medium">Level</th>
+                <th className="p-2 w-3/12 font-medium">Applicability</th>
                 <th className="text-right p-2 pr-3 w-1/12 font-medium">Edit</th>
               </tr>
             </thead>
 
-            {subject.question?.length === 0 ? (
+            {subject.questions?.length === 0 ? (
               <tbody>
                 <tr>
-                  <td colSpan={4}>
+                  <td colSpan={5}>
                     <p className="flex justify-center font-semibold pb-2">
                       No questions for this subject yet.
                     </p>
@@ -49,12 +55,13 @@ export default function QuestionTable({
               </tbody>
             ) : (
               <tbody>
-                {subject.question.map((question) => {
+                {subject.questions.map((question) => {
                   index++;
                   return (
                     <QuestionTableRow
                       key={question.id}
                       question={question}
+                      personnelData={personnelData}
                       index={index.toString()}
                     />
                   );
@@ -66,6 +73,7 @@ export default function QuestionTable({
                 <AddQuestionForm
                   subject={subject}
                   questionFormStatus={setShowAddQuestionForm}
+                  personnelData={personnelData}
                 />
               )}
             </tfoot>
@@ -75,38 +83,3 @@ export default function QuestionTable({
     </div>
   );
 }
-
-function nextChar(c: string) {
-  return String.fromCharCode(c.charCodeAt(0) + 1);
-}
-
-// function incrementString(value: string) {
-//   let carry = 1;
-//   let res = "";
-
-//   for (let i = value.length - 1; i >= 0; i--) {
-//     let char = value.charCodeAt(i);
-
-//     char += carry;
-
-//     if (char > 122) {
-//       char = 97;
-//       carry = 1;
-//     } else {
-//       carry = 0;
-//     }
-
-//     res = String.fromCharCode(char) + res;
-
-//     if (!carry) {
-//       res = value.substring(0, i) + res;
-//       break;
-//     }
-//   }
-
-//   if (carry) {
-//     res = res;
-//   }
-
-//   return res;
-// }

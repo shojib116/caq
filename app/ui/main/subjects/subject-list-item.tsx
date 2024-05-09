@@ -1,6 +1,6 @@
 "use client";
 
-import { Subject } from "@prisma/client";
+import { Personnel, Subject } from "@prisma/client";
 import {
   ChevronRightIcon,
   ChevronDownIcon,
@@ -17,16 +17,18 @@ import { ResponseSubject } from "@/app/lib/definitions";
 export default function SubjectListItem({
   index,
   subject,
+  personnelData,
 }: {
   index: number;
   subject: ResponseSubject;
+  personnelData: Personnel[];
 }) {
   const [editSubject, SetEditSubject] = useState<boolean>(false);
   const [deleteSubject, SetDeleteSubject] = useState<boolean>(false);
   const [showQuestions, setShowQuestions] = useState<boolean>(false);
   return (
     <>
-      <tr className="flex flex-row px-4 py-1 bg-white m-2 rounded-lg">
+      <tr className="flex flex-row px-4 py-1 bg-white m-2 rounded-lg w-auto">
         <td
           className="cursor-pointer p-2 w-1/12 text-center justify-center flex gap-2 items-center"
           onClick={(e) => setShowQuestions(!showQuestions)}
@@ -73,7 +75,13 @@ export default function SubjectListItem({
           />
         )}
       </tr>
-      {showQuestions && <QuestionTable subject={subject} />}
+      {showQuestions && (
+        <tr>
+          <td>
+            <QuestionTable subject={subject} personnelData={personnelData} />
+          </td>
+        </tr>
+      )}
     </>
   );
 }

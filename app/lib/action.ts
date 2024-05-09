@@ -73,14 +73,16 @@ const QuestionSchema = z.object({
 export async function addQuestion(
   subjectId: string,
   question: string,
-  level: number
+  level: number,
+  personnelIDs: string[]
 ) {
   try {
     const response = await prisma.question.create({
       data: {
         subjectID: subjectId,
         text: question,
-        level: level,
+        level,
+        personnelIDs,
       },
     });
 
@@ -95,14 +97,16 @@ export async function addQuestion(
 export async function updateQuestion(
   questionId: string,
   question: string,
-  level: number
+  level: number,
+  personnelIDs: string[]
 ) {
   try {
     await prisma.question.update({
       where: { id: questionId },
       data: {
         text: question,
-        level: level,
+        level,
+        personnelIDs,
       },
     });
 

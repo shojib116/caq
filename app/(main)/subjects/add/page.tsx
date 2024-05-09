@@ -26,7 +26,7 @@ export default function Page() {
                 name="subject"
                 id="subject"
                 required
-                className="peer block w-full rounded-md border border-gray-200 mt-2 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500 md:w-[60rem]"
+                className="peer block w-11/12 rounded-md border border-gray-200 mt-2 py-2 pl-2 text-sm outline-2 placeholder:text-gray-500"
               />
             </div>
             <input

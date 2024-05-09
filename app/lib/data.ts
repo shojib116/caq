@@ -20,6 +20,7 @@ export async function fetchSubjectsPagination(
   noStore();
   const skip = (currentPage - 1) * showCount;
   const take = showCount;
+
   try {
     const data = await prisma.subject.findMany({
       skip,
@@ -31,6 +32,7 @@ export async function fetchSubjectsPagination(
 
     return data;
   } catch (error) {
+    console.log(error);
     console.error("Database Error:", error);
     throw new Error("Failed to fetch subjects");
   }
