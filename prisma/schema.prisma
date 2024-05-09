@@ -11,9 +11,11 @@ datasource db {
 }
 
 model Subject {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  text        String
-  questions    Question[]
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  text          String
+  personnels    Personnel[]   @relation(fields: [personnelIDs], references: [id])
+  personnelIDs  String[]      @db.ObjectId
+  questions     Question[]
 }
 
 model Question {
@@ -27,8 +29,10 @@ model Question {
 }
 
 model Personnel {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  designation String      @unique
-  questions   Question[]  @relation(fields: [questionIDs], references: [id])
-  questionIDs String[]    @db.ObjectId
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  designation   String        @unique
+  subjects      Subject[]     @relation(fields: [subjectIDs], references: [id])
+  subjectIDs    String[]      @db.ObjectId
+  questions     Question[]    @relation(fields: [questionIDs], references: [id])
+  questionIDs   String[]      @db.ObjectId
 }
