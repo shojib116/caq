@@ -1,8 +1,6 @@
 import { fetchSubjectsPagination, fetchPersonnel } from "@/app/lib/data";
 import { Personnel, Subject } from "@prisma/client";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import SubjectListItem from "./subject-list-item";
-import { ResponseSubject } from "@/app/lib/definitions";
 
 export default async function SubjectList({
   currentPage,
@@ -11,7 +9,7 @@ export default async function SubjectList({
   currentPage: number;
   showCount: number;
 }) {
-  const data: ResponseSubject[] | null = await fetchSubjectsPagination(
+  const data: Subject[] | null = await fetchSubjectsPagination(
     currentPage,
     showCount
   );
@@ -22,7 +20,15 @@ export default async function SubjectList({
 
   let index = (currentPage - 1) * showCount;
   return (
-    <table className="my-4 border-collapse bg-gray-100 rounded-xl p-2 table-fixed w-full">
+    <table className="my-4 bg-gray-100 rounded-xl p-2 table-fixed w-full">
+      <thead>
+        <tr>
+          <th className="p-2 w-1/12 font-medium">Sl</th>
+          <th className="text-left p-2 font-medium">Subject</th>
+          <th className="p-2 w-3/12 font-medium">Applicability</th>
+          <th className="p-2 pr-3 w-1/12 font-medium">Edit</th>
+        </tr>
+      </thead>
       <tbody>
         {data.map((subject) => {
           index++;

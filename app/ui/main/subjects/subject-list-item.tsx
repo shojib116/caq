@@ -2,8 +2,6 @@
 
 import { Personnel, Subject } from "@prisma/client";
 import {
-  ChevronRightIcon,
-  ChevronDownIcon,
   PencilIcon,
   TrashIcon,
   CheckIcon,
@@ -11,8 +9,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { deleteSubject, updateSubject } from "@/app/lib/action";
-import QuestionTable from "./question-table";
-import { ResponseSubject } from "@/app/lib/definitions";
 
 export default function SubjectListItem({
   index,
@@ -20,48 +16,28 @@ export default function SubjectListItem({
   personnelData,
 }: {
   index: number;
-  subject: ResponseSubject;
+  subject: Subject;
   personnelData: Personnel[];
 }) {
   const [editSubject, SetEditSubject] = useState<boolean>(false);
   const [deleteSubject, SetDeleteSubject] = useState<boolean>(false);
-  const [showQuestions, setShowQuestions] = useState<boolean>(false);
+
   return (
     <>
-      <tr className="flex flex-row px-4 py-1 bg-white m-2 rounded-lg w-auto">
-        <td
-          className="cursor-pointer p-2 w-1/12 text-center justify-center flex gap-2 items-center"
-          onClick={(e) => setShowQuestions(!showQuestions)}
-        >
-          {!showQuestions ? (
-            <ChevronRightIcon className="w-4 h-4" />
-          ) : (
-            <ChevronDownIcon className="w-4 h-4" />
-          )}
-          {index}.{" "}
+      <tr className="px-4 py-1 bg-white m-2 rounded-lg w-auto">
+        <td className="p-2 text-center justify-center flex gap-2 items-center">
+          {index}.
         </td>
         {!editSubject && !deleteSubject && (
           <>
-            <td
-              className="cursor-pointer p-2 w-10/12"
-              onClick={(e) => setShowQuestions(!showQuestions)}
-            >
-              {subject.text}
-            </td>
-            <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
-              {!showQuestions && (
-                <>
-                  <EditButton
-                    editStatus={editSubject}
-                    setEditStatus={SetEditSubject}
-                    setShowQuestions={setShowQuestions}
-                  />
-                  <DeleteButton
-                    setDeleteStatus={SetDeleteSubject}
-                    setShowQuestions={setShowQuestions}
-                  />
-                </>
-              )}
+            <td className="p-2">{subject.text}</td>
+            <td className="p-2 text-center">Applicability</td>
+            <td className="flex flex-row justify-center items-center gap-2 p-2">
+              <EditButton
+                editStatus={editSubject}
+                setEditStatus={SetEditSubject}
+              />
+              <DeleteButton setDeleteStatus={SetDeleteSubject} />
             </td>
           </>
         )}
@@ -75,13 +51,6 @@ export default function SubjectListItem({
           />
         )}
       </tr>
-      {showQuestions && (
-        <tr>
-          <td>
-            <QuestionTable subject={subject} personnelData={personnelData} />
-          </td>
-        </tr>
-      )}
     </>
   );
 }
@@ -170,17 +139,14 @@ function DeleteConfrimation({
 function EditButton({
   editStatus,
   setEditStatus,
-  setShowQuestions,
 }: {
   editStatus: boolean;
   setEditStatus: (status: boolean) => void;
-  setShowQuestions: (status: boolean) => void;
 }) {
   return (
     <button
       onClick={(e) => {
         setEditStatus(!editStatus);
-        setShowQuestions(false);
       }}
     >
       <PencilIcon className="w-4 h-4" />
@@ -190,16 +156,13 @@ function EditButton({
 
 function DeleteButton({
   setDeleteStatus,
-  setShowQuestions,
 }: {
   setDeleteStatus: (status: boolean) => void;
-  setShowQuestions: (status: boolean) => void;
 }) {
   return (
     <button
       onClick={(e) => {
         setDeleteStatus(true);
-        setShowQuestions(false);
       }}
     >
       <TrashIcon className="w-4 h-4 text-red-600" />
