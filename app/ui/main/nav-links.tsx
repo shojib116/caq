@@ -5,6 +5,7 @@ import {
   UserCircleIcon,
   ClipboardDocumentListIcon,
   PrinterIcon,
+  QuestionMarkCircleIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,10 +13,11 @@ import { usePathname } from "next/navigation";
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
-  { name: "Subject List", href: "/subjects", icon: ClipboardDocumentListIcon },
   { name: "Personnel List", href: "/personnel", icon: UserCircleIcon },
+  { name: "Subject List", href: "/subjects", icon: ClipboardDocumentListIcon },
+  { name: "Question List", href: "/questions", icon: QuestionMarkCircleIcon },
   {
-    name: "Question Matrix",
+    name: "Subject Matrix",
     href: "/matrix",
     icon: ClipboardDocumentCheckIcon,
   },
