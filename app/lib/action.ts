@@ -5,19 +5,12 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-const SubjectSchema = z.object({
-  subject: z.string(),
-});
-
-export async function addSubject(formData: FormData) {
-  const { subject } = SubjectSchema.parse({
-    subject: formData.get("subject"),
-  });
-
+export async function addSubject(subject: string, personnelIDs: string[]) {
   try {
     await prisma.subject.create({
       data: {
         text: subject,
+        personnelIDs,
       },
     });
   } catch (error) {

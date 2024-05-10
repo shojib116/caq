@@ -8,10 +8,12 @@ export default function PersonnelCheckbox({
   checkedItems,
   personnelData,
   setCheckedItems,
+  className,
 }: {
   checkedItems: CheckedItems;
   personnelData: Personnel[];
   setCheckedItems: (data: CheckedItems) => void;
+  className: string;
 }) {
   const [checkAllPersonnel, setCheckAllPersonnel] = useState<boolean>(false);
 
@@ -48,9 +50,9 @@ export default function PersonnelCheckbox({
       });
     }
   };
-
+  //"absolute border rounded bg-white min-w-max p-2 text-xs right-0 mx-2 my-1 flex flex-col gap-1 text-left max-h-28 overflow-y-auto overflow-x-hidden z-50"
   return (
-    <ul className="absolute border rounded bg-white min-w-max p-2 text-xs right-0 mx-2 my-1 flex flex-col gap-1 text-left max-h-28 overflow-y-auto overflow-x-hidden z-50">
+    <ul className={className}>
       <li className="flex flex-row gap-1.5">
         <input
           type="checkbox"
