@@ -26,7 +26,7 @@ export default function AddSubject({
 
     if (!subject || !checkedPersonnelIDs.length) return;
 
-    addSubject(subject, personnelIDs);
+    addSubject(subject, checkedPersonnelIDs);
     redirect("/subjects");
   };
 
