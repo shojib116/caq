@@ -23,7 +23,11 @@ export async function addSubject(subject: string, personnelIDs: string[]) {
   redirect("/subjects");
 }
 
-export async function updateSubject(id: string, subject: string) {
+export async function updateSubject(
+  id: string,
+  subject: string,
+  personnelIDs: string[]
+) {
   try {
     await prisma.subject.update({
       where: {
@@ -31,6 +35,7 @@ export async function updateSubject(id: string, subject: string) {
       },
       data: {
         text: subject,
+        personnelIDs,
       },
     });
   } catch (error) {

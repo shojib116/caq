@@ -20,9 +20,9 @@ export default async function SubjectList({
 
   let index = (currentPage - 1) * showCount;
   return (
-    <table className="my-4 bg-gray-100 rounded-xl p-2 table-fixed w-full">
+    <table className="my-4 bg-gray-100 rounded-lg p-2 w-full border-separate">
       <thead>
-        <tr>
+        <tr className="px-4 py-1 bg-white rounded-lg">
           <th className="p-2 w-1/12 font-medium">Sl</th>
           <th className="text-left p-2 font-medium">Subject</th>
           <th className="p-2 w-3/12 font-medium">Applicability</th>

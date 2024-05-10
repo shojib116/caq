@@ -25,9 +25,6 @@ export async function fetchSubjectsPagination(
     const data = await prisma.subject.findMany({
       skip,
       take,
-      include: {
-        questions: true,
-      },
     });
 
     return data;
@@ -41,9 +38,9 @@ export async function fetchSubjectsPagination(
 export async function fetchSubjectCount() {
   noStore();
   try {
-    const data = await prisma.subject.findMany();
+    const data = await prisma.subject.count();
 
-    return data.length;
+    return data;
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch subjects");
