@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { addQuestion } from "@/app/lib/action";
-import { CheckedItems, ResponseSubject } from "@/app/lib/definitions";
+import { CheckedItems } from "@/app/lib/definitions";
 import {
   CheckIcon,
   XMarkIcon,
@@ -12,12 +12,12 @@ import PersonnelCheckbox from "@/app/ui/main/subjects/personnel-checkbox";
 import { Personnel } from "@prisma/client";
 
 export default function AddQuestionForm({
-  subject,
   personnelData,
+  subjectID,
   questionFormStatus,
 }: {
-  subject: ResponseSubject;
   personnelData: Personnel[];
+  subjectID: string;
   questionFormStatus: (status: boolean) => void;
 }) {
   const [question, setQuestion] = useState<string>();
@@ -27,7 +27,7 @@ export default function AddQuestionForm({
     personnelData.reduce((acc, item) => ({ ...acc, [item.id]: false }), {})
   );
 
-  const addQuestionWithSubjectId = addQuestion.bind(null, subject.id);
+  const addQuestionWithSubjectId = addQuestion.bind(null, subjectID);
 
   const handleSubmit = () => {
     const personnelIDs = Object.keys(checkedItems);
@@ -39,6 +39,8 @@ export default function AddQuestionForm({
     addQuestionWithSubjectId(question, level, checkedPersonnelIDs);
     questionFormStatus(false);
   };
+  const className =
+    "absolute border rounded bg-white min-w-max p-2 text-xs right-0 mx-2 my-1 flex flex-col gap-1 text-left max-h-28 overflow-y-auto overflow-x-hidden z-50";
   return (
     <tr className="w-auto">
       <td className="p-2" colSpan={2}>
@@ -47,7 +49,7 @@ export default function AddQuestionForm({
           name="question"
           id="question"
           onChange={(e) => setQuestion(e.target.value)}
-          className="border border-gray-200 rounded pl-2"
+          className="border border-gray-200 rounded pl-2 text-sm w-full"
           required
         />
       </td>
@@ -57,7 +59,7 @@ export default function AddQuestionForm({
           id="level"
           onChange={(e) => setLevel(Number(e.target.value))}
           defaultValue="1"
-          className="border border-gray-200 rounded text-xs"
+          className="border border-gray-200 rounded text-sm"
           required
         >
           <option value="1">1</option>
@@ -66,36 +68,32 @@ export default function AddQuestionForm({
         </select>
       </td>
       <td className="text-center p-2 relative">
-        {!!personnelData.length && (
-          <span
-            onClick={(e) => {
-              setShowCheckBox(!showCheckBox);
-            }}
-            className="text-xs flex flex-row items-center gap-1 border rounded justify-center px-1"
-          >
-            Select Personnel <ChevronDownIcon className="w-3 h-3" />
-          </span>
-        )}
-        {!personnelData.length && (
-          <span className="text-xs flex flex-row items-center gap-1 border rounded justify-center px-1">
-            Add Some Personnel
-          </span>
-        )}
+        <span
+          onClick={(e) => {
+            setShowCheckBox(!showCheckBox);
+          }}
+          className="text-sm flex flex-row items-center gap-1 border rounded justify-center px-1 font-medium w-fit mx-auto"
+        >
+          Select Personnel <ChevronDownIcon className="w-3 h-3" />
+        </span>
         {showCheckBox && (
           <PersonnelCheckbox
             checkedItems={checkedItems}
             setCheckedItems={setCheckedItems}
             personnelData={personnelData}
+            className={className}
           />
         )}
       </td>
-      <td className="text-right p-2 flex justify-end gap-2">
-        <button onClick={handleSubmit}>
-          <CheckIcon className="w-4 h-4 text-green-500" />
-        </button>
-        <button type="button" onClick={(e) => questionFormStatus(false)}>
-          <XMarkIcon className="w-4 h-4 text-red-500" />
-        </button>
+      <td className="p-2">
+        <div className="flex flex-row justify-center gap-2">
+          <button onClick={handleSubmit}>
+            <CheckIcon className="w-4 h-4 text-green-500" />
+          </button>
+          <button type="button" onClick={(e) => questionFormStatus(false)}>
+            <XMarkIcon className="w-4 h-4 text-red-500" />
+          </button>
+        </div>
       </td>
     </tr>
   );

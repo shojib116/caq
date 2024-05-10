@@ -4,7 +4,21 @@ import { unstable_noStore as noStore } from "next/cache";
 export async function fetchSubjects() {
   noStore();
   try {
-    const data = await prisma.subject.findMany();
+    const data = await prisma.subject.findMany({});
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch subjects");
+  }
+}
+
+export async function fetchSubjectsOnly() {
+  noStore();
+  try {
+    const data = await prisma.subject.findMany({
+      select: { id: true, text: true },
+    });
 
     return data;
   } catch (error) {
@@ -56,5 +70,39 @@ export async function fetchPersonnel() {
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch subjects");
+  }
+}
+
+export async function fetchQuestionWithSubjectID(subjectID: string) {
+  noStore();
+  try {
+    const data = await prisma.question.findMany({
+      where: { subjectID },
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch questions");
+  }
+}
+
+export async function fetchPersonnelWithSubjectID(subjectID: string) {
+  noStore();
+  try {
+    const data = await prisma.personnel.findMany({
+      where: {
+        subjects: {
+          some: {
+            id: subjectID,
+          },
+        },
+      },
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch personnel");
   }
 }

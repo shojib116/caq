@@ -3,7 +3,6 @@
 import prisma from "@/app/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { z } from "zod";
 
 export async function addSubject(subject: string, personnelIDs: string[]) {
   try {
@@ -63,11 +62,6 @@ export async function deleteSubject(id: string) {
   revalidatePath("/subjects");
 }
 
-const QuestionSchema = z.object({
-  question: z.string(),
-  level: z.coerce.number(),
-});
-
 export async function addQuestion(
   subjectId: string,
   question: string,
@@ -84,7 +78,7 @@ export async function addQuestion(
       },
     });
 
-    revalidatePath("/subjects");
+    revalidatePath("/questions");
   } catch (error) {
     return {
       message: "Database Error: Failed to add question",
@@ -108,7 +102,7 @@ export async function updateQuestion(
       },
     });
 
-    revalidatePath("/subjects");
+    revalidatePath("/questions");
   } catch (error) {
     return {
       message: "Database Error: Failed to update question",
@@ -122,7 +116,7 @@ export async function deleteQuestion(questionId: string) {
       where: { id: questionId },
     });
 
-    revalidatePath("/subjects");
+    revalidatePath("/questions");
   } catch (error) {
     return {
       message: "Database Error: Failed to delete question",
