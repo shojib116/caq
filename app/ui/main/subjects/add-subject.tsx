@@ -12,6 +12,14 @@ export default function AddSubject({
 }: {
   personnelData: Personnel[];
 }) {
+  if (personnelData.length === 0) {
+    return (
+      <div className="w-full text-center font-medium mt-5">
+        Add some personnel first.
+      </div>
+    );
+  }
+
   const [subject, setSubject] = useState<string>("");
   const [checkedItems, setCheckedItems] = useState<CheckedItems>(
     personnelData.reduce((acc, item) => ({ ...acc, [item.id]: false }), {})

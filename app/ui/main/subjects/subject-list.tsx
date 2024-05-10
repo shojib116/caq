@@ -1,4 +1,8 @@
-import { fetchSubjectsPagination, fetchPersonnel } from "@/app/lib/data";
+import {
+  fetchSubjectsPagination,
+  fetchPersonnel,
+  fetchSubjectCount,
+} from "@/app/lib/data";
 import { Personnel, Subject } from "@prisma/client";
 import SubjectListItem from "./subject-list-item";
 
@@ -13,6 +17,7 @@ export default async function SubjectList({
     currentPage,
     showCount
   );
+  const subjectCount = await fetchSubjectCount();
   const personnelData: Personnel[] | null = await fetchPersonnel();
   const sortedPersonnelData = personnelData.sort((a, b) =>
     a.designation.localeCompare(b.designation)
@@ -29,19 +34,31 @@ export default async function SubjectList({
           <th className="p-2 pr-3 w-1/12 font-medium">Edit</th>
         </tr>
       </thead>
-      <tbody>
-        {data.map((subject) => {
-          index++;
-          return (
-            <SubjectListItem
-              index={index}
-              subject={subject}
-              key={subject.id}
-              personnelData={sortedPersonnelData}
-            />
-          );
-        })}
-      </tbody>
+      {subjectCount === 0 ? (
+        <tbody>
+          <tr>
+            <td colSpan={5}>
+              <p className="flex justify-center font-semibold py-2">
+                No subjects added yet.
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      ) : (
+        <tbody>
+          {data.map((subject) => {
+            index++;
+            return (
+              <SubjectListItem
+                index={index}
+                subject={subject}
+                key={subject.id}
+                personnelData={sortedPersonnelData}
+              />
+            );
+          })}
+        </tbody>
+      )}
     </table>
   );
 }
