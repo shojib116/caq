@@ -5,7 +5,7 @@ export default function FooterTable() {
         <thead>
           <tr>
             <th className="border-2 border-gray-600 p-2.5 py-4 text-left font-medium ">
-              Candidate's Signature:
+              Candidate&apos;s Signature:
             </th>
 
             <th className="border-2 border-gray-600 p-2">
