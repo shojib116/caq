@@ -106,3 +106,24 @@ export async function fetchPersonnelWithSubjectID(subjectID: string) {
     throw new Error("Failed to fetch personnel");
   }
 }
+
+export async function fetchQuestionsWithPersonnelID(personnelID: string) {
+  try {
+    const data = await prisma.subject.findMany({
+      where: { personnelIDs: { has: personnelID } },
+      select: {
+        id: true,
+        text: true,
+        questions: {
+          where: { personnelIDs: { has: personnelID } },
+          select: { id: true, text: true, level: true },
+        },
+      },
+    });
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch questtions for this personnel");
+  }
+}

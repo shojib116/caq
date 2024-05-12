@@ -1,13 +1,10 @@
-export type ResponseSubject = {
+export type QuestionnaireData = {
+  id: string;
   questions: {
     id: string;
-    subjectID: string;
-    personnelIDs: string[];
     text: string;
     level: number;
   }[];
-} & {
-  id: string;
   text: string;
 };
 
