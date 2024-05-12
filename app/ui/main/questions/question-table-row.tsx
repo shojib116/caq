@@ -158,7 +158,7 @@ function QuestionEditForm({
           onClick={(e) => {
             setShowCheckBox(!showCheckBox);
           }}
-          className="text-sm flex flex-row items-center gap-1 border rounded justify-center px-1 font-medium w-fit mx-auto"
+          className="bg-white text-sm flex flex-row items-center gap-1 border rounded justify-center px-1 font-medium w-fit mx-auto"
         >
           Select Personnel <ChevronDownIcon className="w-3 h-3" />
         </span>

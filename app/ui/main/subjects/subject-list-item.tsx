@@ -127,7 +127,7 @@ function EditForm({
           onClick={(e) => {
             setShowCheckBox(!showCheckBox);
           }}
-          className="text-sm flex flex-row items-center gap-1 border rounded justify-center p-1"
+          className="bg-white w-fit mx-auto text-sm flex flex-row items-center gap-1 border rounded justify-center p-1"
         >
           Select Personnel <ChevronDownIcon className="w-3 h-3" />
         </span>
