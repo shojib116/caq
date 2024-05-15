@@ -69,7 +69,7 @@ export async function fetchPersonnel() {
     return data;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch subjects");
+    throw new Error("Failed to fetch personnel");
   }
 }
 
