@@ -1,4 +1,14 @@
-export default function FooterTable() {
+import { PrintPageAssessorTableData } from "@/app/lib/definitions";
+
+export default function FooterTable({
+  handleAssessorChange,
+}: {
+  handleAssessorChange: (
+    assessor: string,
+    field: string,
+    remarks: string
+  ) => void;
+}) {
   return (
     <div className="mt-8 w-full">
       <table className="w-full">
@@ -33,6 +43,9 @@ export default function FooterTable() {
                 name="assessor-1-name"
                 id="assessor-1-name"
                 className="w-full pl-1"
+                onChange={(e) =>
+                  handleAssessorChange("assessor1", "name", e.target.value)
+                }
               />
             </td>
             <td className="border-2 border-gray-600 p-2">
@@ -44,6 +57,9 @@ export default function FooterTable() {
                 name="assessor-2-name"
                 id="assessor-2-name"
                 className="w-full pl-1"
+                onChange={(e) =>
+                  handleAssessorChange("assessor2", "name", e.target.value)
+                }
               />
             </td>
           </tr>
@@ -57,6 +73,9 @@ export default function FooterTable() {
                 name="assessor-1-position"
                 id="assessor-1-position"
                 className="w-full pl-1"
+                onChange={(e) =>
+                  handleAssessorChange("assessor1", "position", e.target.value)
+                }
               />
             </td>
             <td className="border-2 border-gray-600 p-2">
@@ -68,6 +87,9 @@ export default function FooterTable() {
                 name="assessor-2-position"
                 id="assessor-2-position"
                 className="w-full pl-1"
+                onChange={(e) =>
+                  handleAssessorChange("assessor2", "position", e.target.value)
+                }
               />
             </td>
           </tr>
@@ -87,6 +109,9 @@ export default function FooterTable() {
                 name="assessor-1-date"
                 id="assessor-1-date"
                 className="w-full pl-1 appearance-none"
+                onChange={(e) =>
+                  handleAssessorChange("assessor1", "date", e.target.value)
+                }
               />
             </td>
             <td className="border-2 border-gray-600 p-2">
@@ -98,6 +123,9 @@ export default function FooterTable() {
                 name="assessor-2-date"
                 id="assessor-2-date"
                 className="w-full pl-1"
+                onChange={(e) =>
+                  handleAssessorChange("assessor2", "date", e.target.value)
+                }
               />
             </td>
           </tr>
@@ -110,6 +138,9 @@ export default function FooterTable() {
                 name="assessor-1-remarks"
                 id="assessor-1-remarks"
                 className="w-full pl-1 text-sm"
+                onChange={(e) =>
+                  handleAssessorChange("assessor1", "remarks", e.target.value)
+                }
               />
             </td>
             <td className="border-2 border-gray-600 p-2">
@@ -120,7 +151,9 @@ export default function FooterTable() {
                 name="assessor-2-remarks"
                 id="assessor-2-remarks"
                 className="w-full pl-1 text-sm"
-                rows={4}
+                onChange={(e) =>
+                  handleAssessorChange("assessor2", "remarks", e.target.value)
+                }
               />
             </td>
           </tr>

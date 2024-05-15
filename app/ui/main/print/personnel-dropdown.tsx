@@ -5,8 +5,10 @@ import { Personnel } from "@prisma/client";
 
 export default function PersonnelDropdown({
   personnelData,
+  handleTopTableChange,
 }: {
   personnelData: Personnel[];
+  handleTopTableChange: (field: string, value: string) => void;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -62,6 +64,7 @@ export default function PersonnelDropdown({
               name="staff-name"
               id="staff-name"
               className="pl-2 w-full"
+              onChange={(e) => handleTopTableChange("name", e.target.value)}
             />
           </td>
         </tr>
@@ -75,13 +78,19 @@ export default function PersonnelDropdown({
               name="staff-id"
               id="staff-id"
               className="pl-2 w-full"
+              onChange={(e) => handleTopTableChange("staffID", e.target.value)}
             />
           </td>
           <td className="border-2 border-gray-600 p-1">
             <label htmlFor="date">Date:</label>
           </td>
           <td className="border-2 border-gray-600 p-1">
-            <input type="date" name="date" id="date" />
+            <input
+              type="date"
+              name="date"
+              id="date"
+              onChange={(e) => handleTopTableChange("date", e.target.value)}
+            />
           </td>
         </tr>
       </tbody>

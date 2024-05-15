@@ -8,20 +8,48 @@ export default function PrintableArea({
   personnelData,
   questionData,
   searchParams,
+  handleTopTableChange,
+  handleCheckboxChange,
+  handleRadioButtonChange,
+  handleRemarksChange,
+  handleAssessorChange,
 }: {
   personnelData: Personnel[];
   questionData: QuestionnaireData[];
   searchParams?: { designation?: string };
+  handleTopTableChange: (field: string, value: string) => void;
+  handleCheckboxChange: (
+    subjectID: string,
+    questionID: string,
+    questionText: string,
+    questionLevel: number,
+    isChecked: boolean
+  ) => void;
+  handleRadioButtonChange: (subjectID: string, choice: string) => void;
+  handleRemarksChange: (subjectID: string, remarks: string) => void;
+  handleAssessorChange: (
+    assessor: string,
+    field: string,
+    remarks: string
+  ) => void;
 }) {
   return (
     <>
       <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <PersonnelDropdown personnelData={personnelData} />
+        <PersonnelDropdown
+          personnelData={personnelData}
+          handleTopTableChange={handleTopTableChange}
+        />
       </div>
       {searchParams?.designation && (
-        <QuestionnaireTable questionData={questionData} />
+        <QuestionnaireTable
+          questionData={questionData}
+          handleCheckboxChange={handleCheckboxChange}
+          handleRadioButtonChange={handleRadioButtonChange}
+          handleRemarksChange={handleRemarksChange}
+        />
       )}
-      <FooterTable />
+      <FooterTable handleAssessorChange={handleAssessorChange} />
     </>
   );
 }

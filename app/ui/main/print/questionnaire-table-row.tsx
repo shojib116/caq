@@ -3,8 +3,20 @@ import QuestionListCheckbox from "./question-list-checkbox";
 
 export default function QuestionnaireTableRow({
   data,
+  handleCheckboxChange,
+  handleRadioButtonChange,
+  handleRemarksChange,
 }: {
   data: QuestionnaireData;
+  handleCheckboxChange: (
+    subjectID: string,
+    questionID: string,
+    questionText: string,
+    questionLevel: number,
+    isChecked: boolean
+  ) => void;
+  handleRadioButtonChange: (subjectID: string, choice: string) => void;
+  handleRemarksChange: (subjectID: string, remarks: string) => void;
 }) {
   return (
     <tr>
@@ -13,23 +25,39 @@ export default function QuestionnaireTableRow({
         <ul>
           {data.questions.map((question) => {
             return (
-              <QuestionListCheckbox question={question} key={question.id} />
+              <QuestionListCheckbox
+                subjectID={data.id}
+                question={question}
+                handleCheckboxChange={handleCheckboxChange}
+                key={question.id}
+              />
             );
           })}
         </ul>
       </td>
       <td className="font-medium border-2 border-gray-600 text-center">
-        <input type="radio" name={data.id} />
+        <input
+          type="radio"
+          name={data.id}
+          value="Yes"
+          onChange={() => handleRadioButtonChange(data.id, "Yes")}
+        />
       </td>
       <td className="font-medium border-2 border-gray-600 text-center">
-        <input type="radio" name={data.id} />
+        <input
+          type="radio"
+          name={data.id}
+          value="No"
+          onChange={() => handleRadioButtonChange(data.id, "No")}
+        />
       </td>
       <td className="font-medium border-2 border-gray-600">
         <textarea
           className="w-full h-full p-2 text-sm text-center"
           placeholder=""
           name="comments"
-          id="comments"
+          id={data.id}
+          onChange={(e) => handleRemarksChange(data.id, e.target.value)}
         />
       </td>
     </tr>

@@ -3,8 +3,20 @@ import QuestionnaireTableRow from "./questionnaire-table-row";
 
 export default function QuestionnaireTable({
   questionData,
+  handleCheckboxChange,
+  handleRadioButtonChange,
+  handleRemarksChange,
 }: {
   questionData: QuestionnaireData[];
+  handleCheckboxChange: (
+    subjectID: string,
+    questionID: string,
+    questionText: string,
+    questionLevel: number,
+    isChecked: boolean
+  ) => void;
+  handleRadioButtonChange: (subjectID: string, choice: string) => void;
+  handleRemarksChange: (subjectID: string, remarks: string) => void;
 }) {
   if (questionData.length === 0) {
     return (
@@ -44,7 +56,15 @@ export default function QuestionnaireTable({
         </thead>
         <tbody>
           {questionData.map((subject) => {
-            return <QuestionnaireTableRow data={subject} key={subject.id} />;
+            return (
+              <QuestionnaireTableRow
+                data={subject}
+                handleCheckboxChange={handleCheckboxChange}
+                handleRadioButtonChange={handleRadioButtonChange}
+                handleRemarksChange={handleRemarksChange}
+                key={subject.id}
+              />
+            );
           })}
         </tbody>
       </table>

@@ -1,6 +1,6 @@
 import { fetchPersonnel, fetchQuestionsWithPersonnelID } from "@/app/lib/data";
 import { QuestionnaireData } from "@/app/lib/definitions";
-import PrintableArea from "@/app/ui/main/print/printable-area";
+import PrintPage from "@/app/ui/main/print/print-page";
 
 export default async function Page({
   searchParams,
@@ -30,17 +30,11 @@ export default async function Page({
     questionData = await fetchQuestionsWithPersonnelID(personnelID);
   }
 
-  console.log(questionData);
   return (
-    <div className="w-full relative">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-2xl">Print Questionnaire</h1>
-      </div>
-      <PrintableArea
-        personnelData={personnelData}
-        questionData={questionData}
-        searchParams={searchParams}
-      />
-    </div>
+    <PrintPage
+      personnelData={personnelData}
+      questionData={questionData}
+      searchParams={searchParams}
+    />
   );
 }
