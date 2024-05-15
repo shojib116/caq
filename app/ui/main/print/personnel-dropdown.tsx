@@ -24,6 +24,7 @@ export default function PersonnelDropdown({
 
     replace(`${pathname}?${params}`);
     refresh();
+    window.location.href = `${pathname}?${params}`;
   }
 
   return (
