@@ -1,0 +1,36 @@
+@media print {
+  @page {
+    margin: 0;
+  }
+
+  @page {
+    size: A4 landscape;
+    margin: 25px 100px 100px 100px;
+  }
+
+  .print {
+    width: 100%;
+    display: block !important;
+  }
+
+  .unbreakable {
+    page-break-inside: avoid;
+  }
+
+  .header,
+  .empty-header {
+    height: 5rem;
+  }
+  .header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+  }
+  #footerContent {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
