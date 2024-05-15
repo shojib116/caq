@@ -15,9 +15,9 @@ import { usePathname } from "next/navigation";
 const links = [
   { name: "Personnel List", href: "/personnel", icon: UserCircleIcon },
   { name: "Subject List", href: "/subjects", icon: ClipboardDocumentListIcon },
-  { name: "Question List", href: "/questions", icon: QuestionMarkCircleIcon },
+  { name: "Question Pool", href: "/questions", icon: QuestionMarkCircleIcon },
   {
-    name: "Subject Matrix",
+    name: "Competence Assessment Matrix",
     href: "/matrix",
     icon: ClipboardDocumentCheckIcon,
   },
