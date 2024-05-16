@@ -1,4 +1,8 @@
-import { fetchPersonnel, fetchQuestionsWithPersonnelID } from "@/app/lib/data";
+import {
+  fetchHeader,
+  fetchPersonnel,
+  fetchQuestionsWithPersonnelID,
+} from "@/app/lib/data";
 import { QuestionnaireData } from "@/app/lib/definitions";
 import PrintPage from "@/app/ui/main/print/print-page";
 
@@ -8,6 +12,7 @@ export default async function Page({
   searchParams?: { designation?: string };
 }) {
   const personnelData = await fetchPersonnel();
+  const headerData = await fetchHeader();
 
   if (personnelData.length === 0) {
     return (
@@ -35,6 +40,7 @@ export default async function Page({
       personnelData={personnelData}
       questionData={questionData}
       searchParams={searchParams}
+      headerData={headerData}
     />
   );
 }

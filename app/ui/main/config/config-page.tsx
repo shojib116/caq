@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { FormHeader } from "@prisma/client";
 import { updateHeader } from "@/app/lib/action";
+import dayjs from "dayjs";
 
 export default function ConfigPage({
   headerData,
@@ -178,9 +179,7 @@ export default function ConfigPage({
                   type="date"
                   name="center-text"
                   id="center-text"
-                  value={
-                    headerTableData.date?.toISOString().split("T")[0] || ""
-                  }
+                  value={dayjs(headerTableData.date).format("YYYY-MM-DD")}
                   onChange={(e) => {
                     handleHeaderDataChange(
                       "date",
@@ -215,8 +214,8 @@ export default function ConfigPage({
                   <Image
                     src={newLogoURL}
                     alt="logo"
-                    height={70}
-                    width={120}
+                    height={60}
+                    width={60}
                     className="mx-auto"
                   />
                 )}
@@ -231,7 +230,12 @@ export default function ConfigPage({
                     <p>Issue: {headerTableData.issue}</p>
                     <p>rev: {headerTableData.revision}</p>
                   </div>
-                  <p>Date: {formatDate()}</p>
+                  <p>
+                    Date:{" "}
+                    {headerTableData.date
+                      ? dayjs(headerTableData.date).format("DD-MM-YYYY")
+                      : ""}
+                  </p>
                 </div>
               </td>
             </tr>

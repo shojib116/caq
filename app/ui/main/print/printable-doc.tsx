@@ -3,26 +3,28 @@
 import {
   PrintPageAssessorTableData,
   PrintPageContentTableData,
-  PrintPageHeaderTableData,
   PrintPageTopTableData,
 } from "@/app/lib/definitions";
 import { LegacyRef } from "react";
 import "./print-styles.css";
+import { FormHeader } from "@prisma/client";
+import Image from "next/image";
+import dayjs from "dayjs";
 
 export default function PrintableDocument({
   tableRef,
-  headerTabledData,
   topTableData,
   contentTableData,
   assessor1,
   assessor2,
+  headerData,
 }: {
   tableRef: LegacyRef<HTMLDivElement>;
-  headerTabledData: PrintPageHeaderTableData;
   topTableData: PrintPageTopTableData;
   contentTableData: PrintPageContentTableData;
   assessor1: PrintPageAssessorTableData;
   assessor2: PrintPageAssessorTableData;
+  headerData: FormHeader | null;
 }) {
   const formatDate = (date: Date | "") => {
     if (date === "") return "";
@@ -39,19 +41,32 @@ export default function PrintableDocument({
           <tbody>
             <tr>
               <td className="border-2 border-gray-600 p-1 text-center w-1/4">
-                {headerTabledData.logo}
+                {headerData?.logoURL && (
+                  <Image
+                    src={headerData.logoURL}
+                    alt="logo"
+                    height={60}
+                    width={60}
+                    className="mx-auto"
+                  />
+                )}
               </td>
               <td className="border-2 border-gray-600 p-1 text-xl font-bold text-center w-2/4">
-                {headerTabledData.centerText}
+                {headerData?.centerText}
               </td>
               <td className="border-2 border-gray-600 p-1 text-sm w-1/4">
                 <div className="flex flex-col">
-                  <p>Form No: {headerTabledData.formNumber}</p>
+                  <p>Form No: {headerData?.formNumber}</p>
                   <div className="flex flex-row gap-10">
-                    <p>Issue: {headerTabledData.issue}</p>
-                    <p>rev: {headerTabledData.revision}</p>
+                    <p>Issue: {headerData?.issue}</p>
+                    <p>rev: {headerData?.revision}</p>
                   </div>
-                  <p>Date: {headerTabledData.date?.toLocaleString()}</p>
+                  <p>
+                    Date:{" "}
+                    {headerData?.date
+                      ? dayjs(headerData?.date).format("DD-MM-YYYY")
+                      : ""}
+                  </p>
                 </div>
               </td>
             </tr>

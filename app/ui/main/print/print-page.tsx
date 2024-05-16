@@ -1,9 +1,8 @@
 "use client";
 
-import { Personnel } from "@prisma/client";
+import { FormHeader, Personnel } from "@prisma/client";
 import PrintableArea from "./printable-area";
 import {
-  PrintPageHeaderTableData,
   PrintPageContentTableData,
   PrintPageTopTableData,
   PrintPageAssessorTableData,
@@ -18,16 +17,13 @@ export default function PrintPage({
   personnelData,
   questionData,
   searchParams,
+  headerData,
 }: {
   personnelData: Personnel[];
   questionData: QuestionnaireData[];
   searchParams?: { designation?: string };
+  headerData: FormHeader | null;
 }) {
-  const headerTableData: PrintPageHeaderTableData = {
-    logo: "Logo",
-    centerText: "Competency Assessment Questionnaire Form",
-  };
-
   const initialContentTableData: PrintPageContentTableData = questionData.map(
     (subject) => ({
       id: subject.id,
@@ -200,7 +196,7 @@ export default function PrintPage({
       <div>
         <PrintableDocument
           tableRef={tableRef}
-          headerTabledData={headerTableData}
+          headerData={headerData}
           contentTableData={contentTableData}
           topTableData={topTableData}
           assessor1={assessor1}
