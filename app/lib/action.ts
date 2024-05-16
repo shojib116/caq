@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
+import { FormHeader } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -171,5 +172,53 @@ export async function deletePersonnel(personnelId: string) {
     return {
       message: "Database Error: Failed to delete personnel",
     };
+  }
+}
+export async function updateHeader(
+  headerData: FormHeader,
+  headerLogoURL: string
+) {
+  if (headerData.id === "") {
+    try {
+      await prisma.formHeader.create({
+        data: {
+          logoURL: headerLogoURL,
+          centerText: headerData.centerText,
+          formNumber: headerData.formNumber,
+          issue: headerData.issue,
+          revision: headerData.revision,
+          date: headerData.date,
+        },
+      });
+
+      revalidatePath("/config");
+    } catch (error) {
+      console.error(error);
+      return {
+        message: "Database Error: Failed to add header",
+      };
+    }
+  } else {
+    try {
+      await prisma.formHeader.update({
+        where: {
+          id: headerData.id,
+        },
+        data: {
+          logoURL: headerLogoURL,
+          centerText: headerData.centerText,
+          formNumber: headerData.formNumber,
+          issue: headerData.issue,
+          revision: headerData.revision,
+          date: headerData.date,
+        },
+      });
+
+      revalidatePath("/config");
+    } catch (error) {
+      return {
+        message: "Database Error: Failed to update header",
+      };
+    }
   }
 }

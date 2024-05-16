@@ -6,6 +6,7 @@ import {
   ClipboardDocumentListIcon,
   PrinterIcon,
   QuestionMarkCircleIcon,
+  WrenchIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,6 +23,7 @@ const links = [
     icon: ClipboardDocumentCheckIcon,
   },
   { name: "Print Questionnaire", href: "/print", icon: PrinterIcon },
+  { name: "Cofiguration", href: "/config", icon: WrenchIcon },
 ];
 
 export default function NavLinks() {

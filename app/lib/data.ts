@@ -124,6 +124,17 @@ export async function fetchQuestionsWithPersonnelID(personnelID: string) {
     return data;
   } catch (error) {
     console.error("Database Error:", error);
-    throw new Error("Failed to fetch questtions for this personnel");
+    throw new Error("Failed to fetch questions for this personnel");
+  }
+}
+
+export async function fetchHeader() {
+  try {
+    const data = await prisma.formHeader.findFirst();
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch header info");
   }
 }

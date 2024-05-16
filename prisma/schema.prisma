@@ -36,3 +36,14 @@ model Personnel {
   questions     Question[]    @relation(fields: [questionIDs], references: [id])
   questionIDs   String[]      @db.ObjectId
 }
+
+model FormHeader {
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  logoURL       String
+  centerText    String
+  formNumber    String?
+  issue         String?
+  revision      String?
+  date          DateTime? 
+}
+

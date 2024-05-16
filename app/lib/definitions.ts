@@ -13,7 +13,7 @@ export type CheckedItems = {
 };
 
 export type PrintPageHeaderTableData = {
-  logo?: string;
+  logoURL?: string;
   centerText: string;
   formNumber?: string;
   issue?: string;
