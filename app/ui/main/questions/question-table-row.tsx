@@ -51,10 +51,16 @@ export default function QuestionTableRow({
           </td>
           <td className="p-2">
             <div className="flex flex-row justify-center gap-2">
-              <button onClick={(e) => setShowQuestionEditForm(true)}>
+              <button
+                type="button"
+                onClick={(e) => setShowQuestionEditForm(true)}
+              >
                 <PencilIcon className="w-4 h-4" />
               </button>
-              <button onClick={(e) => setShowDeleteQuestionPrompt(true)}>
+              <button
+                type="button"
+                onClick={(e) => setShowDeleteQuestionPrompt(true)}
+              >
                 <TrashIcon className="w-4 h-4 text-red-500" />
               </button>
             </div>

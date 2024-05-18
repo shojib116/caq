@@ -212,6 +212,7 @@ function EditButton({
 }) {
   return (
     <button
+      type="button"
       onClick={(e) => {
         setEditStatus(!editStatus);
       }}
@@ -228,6 +229,7 @@ function DeleteButton({
 }) {
   return (
     <button
+      type="button"
       onClick={(e) => {
         setDeleteStatus(true);
       }}
