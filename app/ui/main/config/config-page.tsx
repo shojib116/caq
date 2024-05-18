@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import Image from "next/image";
 import { FormHeader } from "@prisma/client";
 import { updateHeader } from "@/app/lib/action";
@@ -11,6 +11,8 @@ export default function ConfigPage({
 }: {
   headerData: FormHeader | null;
 }) {
+  const [isPending, startTransition] = useTransition();
+
   const initialHeaderData: FormHeader = {
     id: headerData ? headerData.id : "",
     logoURL: headerData ? headerData.logoURL : "",
@@ -70,7 +72,9 @@ export default function ConfigPage({
 
   async function handleInfoSubmit() {
     const headerLogoURL = (await handleUpload()) || "";
-    updateHeader(headerTableData, headerLogoURL);
+    startTransition(() => {
+      updateHeader(headerTableData, headerLogoURL);
+    });
   }
 
   function formatDate() {
@@ -196,6 +200,7 @@ export default function ConfigPage({
                   type="button"
                   className="bg-blue-600 p-2 text-white rounded"
                   onClick={handleInfoSubmit}
+                  disabled={isPending}
                 >
                   Update
                 </button>

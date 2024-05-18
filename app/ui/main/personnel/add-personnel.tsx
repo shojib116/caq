@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { AddNewPersonnelButton } from "./buttons";
 import { addPersonnel } from "@/app/lib/action";
 
 export default function AddNewPersonnel() {
+  const [isPending, startTransition] = useTransition();
   const [showAddPersonnelInput, setShowAddPersonnelInput] =
     useState<boolean>(false);
   const [personnelDesignation, setPersonnelDesignation] = useState<string>();
 
   function handleSubmit() {
     if (!personnelDesignation) return;
-    addPersonnel(personnelDesignation);
+    startTransition(() => {
+      addPersonnel(personnelDesignation);
+    });
     setShowAddPersonnelInput(false);
   }
 
@@ -29,6 +32,7 @@ export default function AddNewPersonnel() {
             type="submit"
             className="border-2 border-gray-700 text-sm font-medium p-1 rounded bg-blue-500 text-white"
             onClick={handleSubmit}
+            disabled={isPending}
           >
             Submit
           </button>

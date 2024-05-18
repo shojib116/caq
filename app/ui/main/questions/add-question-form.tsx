@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { addQuestion } from "@/app/lib/action";
 import { CheckedItems } from "@/app/lib/definitions";
 import {
@@ -20,6 +20,7 @@ export default function AddQuestionForm({
   subjectID: string;
   questionFormStatus: (status: boolean) => void;
 }) {
+  const [isPending, startTransition] = useTransition();
   const [question, setQuestion] = useState<string>();
   const [level, setLevel] = useState<number>(1);
   const [showCheckBox, setShowCheckBox] = useState<boolean>(false);
@@ -36,14 +37,17 @@ export default function AddQuestionForm({
     );
     if (!question || !level || !checkedPersonnelIDs.length) return;
 
-    addQuestionWithSubjectId(question, level, checkedPersonnelIDs);
+    startTransition(() => {
+      addQuestionWithSubjectId(question, level, checkedPersonnelIDs);
+    });
     questionFormStatus(false);
   };
   const className =
     "absolute border rounded bg-white min-w-max p-2 text-xs right-0 mx-2 my-1 flex flex-col gap-1 text-left max-h-28 overflow-y-auto overflow-x-hidden z-50";
   return (
-    <tr className="w-auto">
-      <td className="p-2" colSpan={2}>
+    <tr className="px-4 py-1 bg-white m-2 rounded-lg">
+      <td></td>
+      <td className="p-2 text-center">
         <input
           type="text"
           name="question"
@@ -87,7 +91,7 @@ export default function AddQuestionForm({
       </td>
       <td className="p-2">
         <div className="flex flex-row justify-center gap-2">
-          <button onClick={handleSubmit}>
+          <button type="button" onClick={handleSubmit} disabled={isPending}>
             <CheckIcon className="w-4 h-4 text-green-500" />
           </button>
           <button type="button" onClick={(e) => questionFormStatus(false)}>

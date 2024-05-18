@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Personnel } from "@prisma/client";
 import PersonnelCheckbox from "@/app/ui/main/subjects/personnel-checkbox";
 import { CheckedItems } from "@/app/lib/definitions";
@@ -12,6 +12,7 @@ export default function AddSubject({
 }: {
   personnelData: Personnel[];
 }) {
+  const [isPending, startTransition] = useTransition();
   const [subject, setSubject] = useState<string>("");
   const [checkedItems, setCheckedItems] = useState<CheckedItems>(
     personnelData.reduce((acc, item) => ({ ...acc, [item.id]: false }), {})
@@ -26,7 +27,9 @@ export default function AddSubject({
 
     if (!subject || !checkedPersonnelIDs.length) return;
 
-    addSubject(subject, checkedPersonnelIDs);
+    startTransition(() => {
+      addSubject(subject, checkedPersonnelIDs);
+    });
     redirect("/subjects");
   };
 
@@ -68,6 +71,7 @@ export default function AddSubject({
             e.preventDefault;
             handleSubmit();
           }}
+          disabled={isPending}
         >
           Submit
         </button>

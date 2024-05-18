@@ -9,7 +9,7 @@ import {
   InformationCircleIcon,
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { deleteSubject, updateSubject } from "@/app/lib/action";
 import { getDesignations } from "@/app/ui/main/questions/question-table-row";
 import PersonnelCheckbox from "@/app/ui/main/subjects/personnel-checkbox";
@@ -84,6 +84,7 @@ function EditForm({
   setEditStatus: (status: boolean) => void;
   personnelData: Personnel[];
 }) {
+  const [isPending, startTransition] = useTransition();
   const [newSubject, setNewSubject] = useState<string>(subject.text);
   const [showCheckBox, setShowCheckBox] = useState<boolean>(false);
   const [checkedItems, setCheckedItems] = useState<CheckedItems>(
@@ -103,7 +104,9 @@ function EditForm({
       (id) => checkedItems[id] === true
     );
     if (!newSubject || !checkedPersonnelIDs.length) return;
-    updateSubjectWithId(newSubject, checkedPersonnelIDs);
+    startTransition(() => {
+      updateSubjectWithId(newSubject, checkedPersonnelIDs);
+    });
     setEditStatus(false);
   };
 
@@ -142,7 +145,7 @@ function EditForm({
       </td>
       <td className="p-2">
         <div className="flex flex-row justify-center gap-2">
-          <button type="button" onClick={handleSubmit}>
+          <button type="button" onClick={handleSubmit} disabled={isPending}>
             <CheckIcon className="w-4 h-4 text-green-500" />
           </button>
           <button
@@ -166,6 +169,7 @@ function DeleteConfrimation({
   subject: Subject;
   setDeleteStatus: (status: boolean) => void;
 }) {
+  const [isPending, startTransition] = useTransition();
   const deleteSubjectWithId = deleteSubject.bind(null, subject.id);
   return (
     <>
@@ -177,8 +181,11 @@ function DeleteConfrimation({
           <button
             type="submit"
             onClick={(e) => {
-              deleteSubjectWithId();
+              startTransition(() => {
+                deleteSubjectWithId();
+              });
             }}
+            disabled={isPending}
           >
             <CheckIcon className="w-4 h-4 text-red-500" />
           </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import {
   CheckIcon,
   PencilIcon,
@@ -103,6 +103,7 @@ function QuestionEditForm({
   newLevel: number;
   setNewLevel: (level: number) => void;
 }) {
+  const [isPending, startTransition] = useTransition();
   const [showCheckBox, setShowCheckBox] = useState<boolean>(false);
   const [checkedItems, setCheckedItems] = useState<CheckedItems>(
     personnelData.reduce(
@@ -120,7 +121,9 @@ function QuestionEditForm({
     );
 
     if (!newQuestion || !checkedPersonnelIDs.length) return;
-    updateQuestion(question.id, newQuestion, newLevel, checkedPersonnelIDs);
+    startTransition(() => {
+      updateQuestion(question.id, newQuestion, newLevel, checkedPersonnelIDs);
+    });
     setEditFormStatus(false);
   };
 
@@ -173,10 +176,10 @@ function QuestionEditForm({
       </td>
       <td className="p-2">
         <div className="flex flex-row justify-center gap-2">
-          <button onClick={handleSubmit}>
+          <button type="button" onClick={handleSubmit} disabled={isPending}>
             <CheckIcon className="w-4 h-4 text-green-500" />
           </button>
-          <button onClick={(e) => setEditFormStatus(false)}>
+          <button type="button" onClick={(e) => setEditFormStatus(false)}>
             <XMarkIcon className="w-4 h-4 text-red-500" />
           </button>
         </div>
@@ -194,6 +197,7 @@ function DeleteQuestionPrompt({
   index: string;
   setDeletePromptStatus: (status: boolean) => void;
 }) {
+  const [isPending, startTransition] = useTransition();
   return (
     <>
       <td className="p-2 text-center">{index}.</td>
@@ -202,10 +206,18 @@ function DeleteQuestionPrompt({
       </td>
       <td className="p-2">
         <div className="flex flex-row gap-2 justify-center">
-          <button onClick={(e) => deleteQuestion(question.id)}>
+          <button
+            type="button"
+            onClick={(e) =>
+              startTransition(() => {
+                deleteQuestion(question.id);
+              })
+            }
+            disabled={isPending}
+          >
             <CheckIcon className="w-4 h-4 text-red-500" />
           </button>
-          <button onClick={(e) => setDeletePromptStatus(false)}>
+          <button type="button" onClick={(e) => setDeletePromptStatus(false)}>
             <XMarkIcon className="w-4 h-4 text-green-500" />
           </button>
         </div>

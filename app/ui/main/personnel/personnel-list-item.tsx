@@ -1,14 +1,12 @@
 "use client";
 
-import { Subject } from "@prisma/client";
 import {
   PencilIcon,
   TrashIcon,
   CheckIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
-import { string } from "zod";
+import { useState, useTransition } from "react";
 import { deletePersonnel, updatePersonnel } from "@/app/lib/action";
 
 type Personnel = {
@@ -66,6 +64,7 @@ function EditForm({
   personnel: Personnel;
   setEditStatus: (status: boolean) => void;
 }) {
+  const [isPending, startTranstion] = useTransition();
   const [newDesignation, setNewDesignation] = useState<string>(
     personnel.designation
   );
@@ -73,7 +72,9 @@ function EditForm({
   const handleSubmit = () => {
     if (!newDesignation) return;
     if (newDesignation !== personnel.designation) {
-      updatePersonneltWithId(newDesignation);
+      startTranstion(() => {
+        updatePersonneltWithId(newDesignation);
+      });
     }
     setEditStatus(false);
   };
@@ -91,7 +92,7 @@ function EditForm({
         />
       </td>
       <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
-        <button type="button" onClick={handleSubmit}>
+        <button type="button" onClick={handleSubmit} disabled={isPending}>
           <CheckIcon className="w-4 h-4 text-green-500" />
         </button>
         <button
@@ -114,18 +115,22 @@ function DeleteConfrimation({
   personnel: Personnel;
   setDeleteStatus: (status: boolean) => void;
 }) {
+  const [isPending, startTranstion] = useTransition();
   const deletePersonnelWithId = deletePersonnel.bind(null, personnel.id);
   return (
     <>
       <td className="cursor-pointer p-2 w-10/12 text-red-500">
-        Are you absolutely sure you want to delete this subject?
+        Are you absolutely sure you want to delete this Personnel?
       </td>
       <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
         <button
           type="submit"
           onClick={(e) => {
-            deletePersonnelWithId();
+            startTranstion(() => {
+              deletePersonnelWithId();
+            });
           }}
+          disabled={isPending}
         >
           <CheckIcon className="w-4 h-4 text-red-500" />
         </button>
