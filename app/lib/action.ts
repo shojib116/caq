@@ -161,28 +161,29 @@ export async function addPersonnel(designation: string) {
   revalidatePath("/personnel");
 }
 
-export async function increasePriority(personnel: Personnel) {
-  if (personnel.priority === 1) return;
+export async function updatePersonnel(
+  personnelId: string,
+  designation: string,
+  oldPriority: number,
+  newPriority: number
+) {
   try {
-    const higherPriorityPersonnel = await prisma.personnel.findFirst({
-      where: {
-        priority: personnel.priority - 1,
-      },
-    });
-
     await prisma.personnel.update({
-      where: {
-        id: higherPriorityPersonnel?.id,
-      },
+      where: { id: personnelId },
       data: {
-        priority: personnel.priority,
+        designation,
       },
     });
 
-    await prisma.personnel.update({
-      where: {
-        id: personnel.id,
-      },
+    const totalPersonnel = await prisma.personnel.count();
+
+    if (newPriority > totalPersonnel) {
+      revalidatePath("/personnel");
+      return;
+    }
+
+    await prisma.personnel.updateMany({
+      where: { priority: { gt: oldPriority } },
       data: {
         priority: {
           decrement: 1,
@@ -190,37 +191,11 @@ export async function increasePriority(personnel: Personnel) {
       },
     });
 
-    revalidatePath("/personnel");
-  } catch (error) {
-    console.error(error);
-    return {
-      message: "Database Error: Failed to update personnel priority",
-    };
-  }
-}
-
-export async function decreasePriority(personnel: Personnel) {
-  const totalPersonnel = await prisma.personnel.count();
-  if (personnel.priority === totalPersonnel) return;
-  try {
-    const lowerPriorityPersonnel = await prisma.personnel.findFirst({
+    await prisma.personnel.updateMany({
       where: {
-        priority: personnel.priority + 1,
-      },
-    });
-
-    await prisma.personnel.update({
-      where: {
-        id: lowerPriorityPersonnel?.id,
-      },
-      data: {
-        priority: personnel.priority,
-      },
-    });
-
-    await prisma.personnel.update({
-      where: {
-        id: personnel.id,
+        priority: {
+          gte: newPriority,
+        },
       },
       data: {
         priority: {
@@ -229,24 +204,12 @@ export async function decreasePriority(personnel: Personnel) {
       },
     });
 
-    revalidatePath("/personnel");
-  } catch (error) {
-    console.error(error);
-    return {
-      message: "Database Error: Failed to update personnel priority",
-    };
-  }
-}
-
-export async function updatePersonnel(
-  personnelId: string,
-  designation: string
-) {
-  try {
     await prisma.personnel.update({
-      where: { id: personnelId },
+      where: {
+        id: personnelId,
+      },
       data: {
-        designation,
+        priority: newPriority,
       },
     });
 

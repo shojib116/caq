@@ -9,12 +9,7 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useTransition } from "react";
-import {
-  decreasePriority,
-  deletePersonnel,
-  increasePriority,
-  updatePersonnel,
-} from "@/app/lib/action";
+import { deletePersonnel, updatePersonnel } from "@/app/lib/action";
 import { Personnel } from "@prisma/client";
 
 export default function PersonnelListItem({
@@ -68,45 +63,34 @@ function EditForm({
   const [newDesignation, setNewDesignation] = useState<string>(
     personnel.designation
   );
+  const [newPriority, setNewPriority] = useState<number>();
+
   const updatePersonneltWithId = updatePersonnel.bind(null, personnel.id);
   const handleSubmit = () => {
-    if (!newDesignation) return;
-    if (newDesignation !== personnel.designation) {
+    if (newDesignation === "" || newPriority === undefined) return;
+    if (newPriority < 1) return;
+    if (
+      newDesignation !== personnel.designation ||
+      newPriority !== personnel.priority
+    ) {
       startTranstion(() => {
-        updatePersonneltWithId(newDesignation);
+        updatePersonneltWithId(newDesignation, personnel.priority, newPriority);
       });
     }
     setEditStatus(false);
   };
   return (
     <>
-      <td className="p-1">
-        <div className="flex flex-col gap-1 items-center w-full">
-          <button
-            type="button"
-            onClick={() => {
-              startTranstion(() => {
-                increasePriority(personnel);
-              });
-              setEditStatus(false);
-            }}
-            disabled={isPending}
-          >
-            <ChevronUpIcon className="w-3 border rounded border-gray-700" />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              startTranstion(() => {
-                decreasePriority(personnel);
-              });
-              setEditStatus(false);
-            }}
-            disabled={isPending}
-          >
-            <ChevronDownIcon className="w-3 border rounded border-gray-700" />
-          </button>
-        </div>
+      <td className="p-1 w-1/12 text-center">
+        <input
+          type="number"
+          id="priority"
+          name="priority"
+          defaultValue={personnel.priority}
+          onChange={(e) => setNewPriority(Number(e.target.value))}
+          required
+          className="w-full border px-2 rounded border-gray-200 focus:border-blue-200"
+        />
       </td>
       <td className="cursor-pointer p-2 w-10/12">
         <input
