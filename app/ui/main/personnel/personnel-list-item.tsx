@@ -28,7 +28,7 @@ export default function PersonnelListItem({
 
             <td className="p-2 w-10/12">{personnel.designation}</td>
             <td className="p-2 w-1/12">
-              <div className="flex flex-row gap-2">
+              <div className="flex flex-row gap-2 justify-center">
                 <EditButton
                   editStatus={editPersonnel}
                   setEditStatus={SetEditPersonnel}
@@ -104,7 +104,7 @@ function EditForm({
         />
       </td>
       <td className="p-2 w-1/12">
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 justify-center">
           <button type="button" onClick={handleSubmit} disabled={isPending}>
             <CheckIcon className="w-4 h-4 text-green-500" />
           </button>
@@ -138,7 +138,7 @@ function DeleteConfrimation({
         Are you absolutely sure you want to delete this Personnel?
       </td>
       <td className="w-1/12 p-2">
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row gap-2 justify-center">
           <button
             type="submit"
             onClick={(e) => {
