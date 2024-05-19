@@ -12,7 +12,7 @@ datasource db {
 
 model Subject {
   id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  text          String
+  text          String        @unique
   personnels    Personnel[]   @relation(fields: [personnelIDs], references: [id])
   personnelIDs  String[]      @db.ObjectId
   questions     Question[]
@@ -24,13 +24,14 @@ model Question {
   subjectID     String        @db.ObjectId
   personnels    Personnel[]   @relation(fields: [personnelIDs], references: [id])
   personnelIDs  String[]      @db.ObjectId
-  text          String
+  text          String        
   level         Int
 }
 
 model Personnel {
   id            String        @id @default(auto()) @map("_id") @db.ObjectId
   designation   String        @unique
+  priority      Int           
   subjects      Subject[]     @relation(fields: [subjectIDs], references: [id])
   subjectIDs    String[]      @db.ObjectId
   questions     Question[]    @relation(fields: [questionIDs], references: [id])

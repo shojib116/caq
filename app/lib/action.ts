@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
-import { FormHeader } from "@prisma/client";
+import { FormHeader, Personnel } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -14,6 +14,7 @@ export async function addSubject(subject: string, personnelIDs: string[]) {
       },
     });
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to add subject.",
     };
@@ -39,6 +40,7 @@ export async function updateSubject(
       },
     });
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to add subject.",
     };
@@ -55,6 +57,7 @@ export async function deleteSubject(id: string) {
       },
     });
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to add subject.",
     };
@@ -81,6 +84,7 @@ export async function addQuestion(
 
     revalidatePath("/questions");
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to add question",
     };
@@ -105,6 +109,7 @@ export async function updateQuestion(
 
     revalidatePath("/questions");
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to update question",
     };
@@ -119,6 +124,7 @@ export async function deleteQuestion(questionId: string) {
 
     revalidatePath("/questions");
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to delete question",
     };
@@ -127,18 +133,109 @@ export async function deleteQuestion(questionId: string) {
 
 export async function addPersonnel(designation: string) {
   try {
+    const highestPriorityPersonnel = await prisma.personnel.findFirst({
+      orderBy: {
+        priority: "desc",
+      },
+      take: 1,
+    });
+
+    const newPriority = highestPriorityPersonnel
+      ? highestPriorityPersonnel.priority + 1
+      : 1;
+
     await prisma.personnel.create({
       data: {
-        designation,
+        designation: designation,
+        priority: newPriority,
       },
     });
+    revalidatePath("/personnel");
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to add Personnel.",
     };
   }
 
   revalidatePath("/personnel");
+}
+
+export async function increasePriority(personnel: Personnel) {
+  if (personnel.priority === 1) return;
+  try {
+    const higherPriorityPersonnel = await prisma.personnel.findFirst({
+      where: {
+        priority: personnel.priority - 1,
+      },
+    });
+
+    await prisma.personnel.update({
+      where: {
+        id: higherPriorityPersonnel?.id,
+      },
+      data: {
+        priority: personnel.priority,
+      },
+    });
+
+    await prisma.personnel.update({
+      where: {
+        id: personnel.id,
+      },
+      data: {
+        priority: {
+          decrement: 1,
+        },
+      },
+    });
+
+    revalidatePath("/personnel");
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update personnel priority",
+    };
+  }
+}
+
+export async function decreasePriority(personnel: Personnel) {
+  const totalPersonnel = await prisma.personnel.count();
+  if (personnel.priority === totalPersonnel) return;
+  try {
+    const lowerPriorityPersonnel = await prisma.personnel.findFirst({
+      where: {
+        priority: personnel.priority + 1,
+      },
+    });
+
+    await prisma.personnel.update({
+      where: {
+        id: lowerPriorityPersonnel?.id,
+      },
+      data: {
+        priority: personnel.priority,
+      },
+    });
+
+    await prisma.personnel.update({
+      where: {
+        id: personnel.id,
+      },
+      data: {
+        priority: {
+          increment: 1,
+        },
+      },
+    });
+
+    revalidatePath("/personnel");
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to update personnel priority",
+    };
+  }
 }
 
 export async function updatePersonnel(
@@ -155,6 +252,7 @@ export async function updatePersonnel(
 
     revalidatePath("/personnel");
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to update personnel designation",
     };
@@ -163,12 +261,22 @@ export async function updatePersonnel(
 
 export async function deletePersonnel(personnelId: string) {
   try {
-    await prisma.personnel.delete({
+    const deletedPersonnel = await prisma.personnel.delete({
       where: { id: personnelId },
+    });
+
+    await prisma.personnel.updateMany({
+      where: { priority: { gte: deletedPersonnel.priority } },
+      data: {
+        priority: {
+          decrement: 1,
+        },
+      },
     });
 
     revalidatePath("/personnel");
   } catch (error) {
+    console.error(error);
     return {
       message: "Database Error: Failed to delete personnel",
     };
@@ -216,6 +324,7 @@ export async function updateHeader(
 
       revalidatePath("/config");
     } catch (error) {
+      console.error(error);
       return {
         message: "Database Error: Failed to update header",
       };

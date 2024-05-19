@@ -40,7 +40,7 @@ export default function QuestionTable({
                 <th className="text-left p-2 font-medium">Question</th>
                 <th className="p-2 w-1/12 font-medium">Level</th>
                 <th className="p-2 w-3/12 font-medium">Applicability</th>
-                <th className="p-2 pr-3 w-1/12 font-medium">Edit</th>
+                <th className="p-2 w-1/12 font-medium">Edit</th>
               </tr>
             </thead>
 

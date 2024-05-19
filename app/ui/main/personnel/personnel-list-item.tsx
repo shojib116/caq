@@ -5,41 +5,41 @@ import {
   TrashIcon,
   CheckIcon,
   XMarkIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useTransition } from "react";
-import { deletePersonnel, updatePersonnel } from "@/app/lib/action";
-
-type Personnel = {
-  designation: string;
-  id: string;
-};
+import {
+  decreasePriority,
+  deletePersonnel,
+  increasePriority,
+  updatePersonnel,
+} from "@/app/lib/action";
+import { Personnel } from "@prisma/client";
 
 export default function PersonnelListItem({
-  index,
   personnel,
 }: {
-  index: number;
   personnel: Personnel;
 }) {
   const [editPersonnel, SetEditPersonnel] = useState<boolean>(false);
   const [deletePersonnel, SetDeletePersonnel] = useState<boolean>(false);
   return (
     <>
-      <tr className="flex flex-row px-4 py-1 bg-white m-2 rounded-lg">
-        <td className="cursor-pointer p-2 w-1/12 text-center justify-center flex gap-2 items-center">
-          {index}.{" "}
-        </td>
+      <tr className="px-4 py-1 bg-white rounded-lg">
         {!editPersonnel && !deletePersonnel && (
           <>
-            <td className="cursor-pointer p-2 w-10/12">
-              {personnel.designation}
-            </td>
-            <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
-              <EditButton
-                editStatus={editPersonnel}
-                setEditStatus={SetEditPersonnel}
-              />
-              <DeleteButton setDeleteStatus={SetDeletePersonnel} />
+            <td className="p-2 w-1/12 text-center">{personnel.priority}. </td>
+
+            <td className="p-2 w-10/12">{personnel.designation}</td>
+            <td className="p-2 w-1/12">
+              <div className="flex flex-row gap-2">
+                <EditButton
+                  editStatus={editPersonnel}
+                  setEditStatus={SetEditPersonnel}
+                />
+                <DeleteButton setDeleteStatus={SetDeletePersonnel} />
+              </div>
             </td>
           </>
         )}
@@ -80,6 +80,34 @@ function EditForm({
   };
   return (
     <>
+      <td className="p-1">
+        <div className="flex flex-col gap-1 items-center w-full">
+          <button
+            type="button"
+            onClick={() => {
+              startTranstion(() => {
+                increasePriority(personnel);
+              });
+              setEditStatus(false);
+            }}
+            disabled={isPending}
+          >
+            <ChevronUpIcon className="w-3 border rounded border-gray-700" />
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              startTranstion(() => {
+                decreasePriority(personnel);
+              });
+              setEditStatus(false);
+            }}
+            disabled={isPending}
+          >
+            <ChevronDownIcon className="w-3 border rounded border-gray-700" />
+          </button>
+        </div>
+      </td>
       <td className="cursor-pointer p-2 w-10/12">
         <input
           type="text"
@@ -91,18 +119,20 @@ function EditForm({
           className="w-full border px-2 rounded border-gray-200 focus:border-blue-200"
         />
       </td>
-      <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
-        <button type="button" onClick={handleSubmit} disabled={isPending}>
-          <CheckIcon className="w-4 h-4 text-green-500" />
-        </button>
-        <button
-          type="button"
-          onClick={(e) => {
-            setEditStatus(false);
-          }}
-        >
-          <XMarkIcon className="w-4 h-4 text-red-500" />
-        </button>
+      <td className="p-2 w-1/12">
+        <div className="flex flex-row gap-2">
+          <button type="button" onClick={handleSubmit} disabled={isPending}>
+            <CheckIcon className="w-4 h-4 text-green-500" />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              setEditStatus(false);
+            }}
+          >
+            <XMarkIcon className="w-4 h-4 text-red-500" />
+          </button>
+        </div>
       </td>
     </>
   );
@@ -119,29 +149,32 @@ function DeleteConfrimation({
   const deletePersonnelWithId = deletePersonnel.bind(null, personnel.id);
   return (
     <>
+      <td className="p-2 w-1/12 text-center">{personnel.priority}.</td>
       <td className="cursor-pointer p-2 w-10/12 text-red-500">
         Are you absolutely sure you want to delete this Personnel?
       </td>
-      <td className="flex flex-row justify-center items-center gap-2 w-1/12 p-2">
-        <button
-          type="submit"
-          onClick={(e) => {
-            startTranstion(() => {
-              deletePersonnelWithId();
-            });
-          }}
-          disabled={isPending}
-        >
-          <CheckIcon className="w-4 h-4 text-red-500" />
-        </button>
-        <button
-          type="button"
-          onClick={(e) => {
-            setDeleteStatus(false);
-          }}
-        >
-          <XMarkIcon className="w-4 h-4 text-green-500" />
-        </button>
+      <td className="w-1/12 p-2">
+        <div className="flex flex-row gap-2">
+          <button
+            type="submit"
+            onClick={(e) => {
+              startTranstion(() => {
+                deletePersonnelWithId();
+              });
+            }}
+            disabled={isPending}
+          >
+            <CheckIcon className="w-4 h-4 text-red-500" />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              setDeleteStatus(false);
+            }}
+          >
+            <XMarkIcon className="w-4 h-4 text-green-500" />
+          </button>
+        </div>
       </td>
     </>
   );

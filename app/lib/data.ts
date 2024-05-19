@@ -64,7 +64,9 @@ export async function fetchSubjectCount() {
 export async function fetchPersonnel() {
   noStore();
   try {
-    const data = await prisma.personnel.findMany();
+    const data = (await prisma.personnel.findMany()).sort(
+      (a, b) => a.priority - b.priority
+    );
 
     return data;
   } catch (error) {
