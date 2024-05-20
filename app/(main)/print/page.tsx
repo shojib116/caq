@@ -5,6 +5,7 @@ import {
 } from "@/app/lib/data";
 import { QuestionnaireData } from "@/app/lib/definitions";
 import PrintPage from "@/app/ui/main/print/print-page";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   searchParams,
@@ -24,6 +25,15 @@ export default async function Page({
 
   let questionData: QuestionnaireData[] = [];
   if (searchParams?.designation) {
+    let flag = 0;
+    personnelData.map((personnel) => {
+      if (personnel.designation === searchParams.designation) {
+        flag = 1;
+      }
+    });
+    if (flag === 0) {
+      notFound();
+    }
     const personnelMap: { [key: string]: string } = personnelData.reduce(
       (accu, personnel) => ({ ...accu, [personnel.designation]: personnel.id }),
       {}

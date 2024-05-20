@@ -6,6 +6,7 @@ import {
 import QuestionTable from "@/app/ui/main/questions/question-table";
 import SubjectListDropdown from "@/app/ui/main/questions/subject-list-dropdown";
 import { Personnel, Question } from "@prisma/client";
+import { notFound } from "next/navigation";
 
 export default async function Page({
   searchParams,
@@ -16,6 +17,15 @@ export default async function Page({
   let questionData: Question[] = [];
   let personnelData: Personnel[] = [];
   if (searchParams?.subjectID) {
+    let flag = 0;
+    subjectData.map((subject) => {
+      if (subject.id === searchParams.subjectID) {
+        flag = 1;
+      }
+    });
+    if (flag === 0) {
+      notFound();
+    }
     questionData = await fetchQuestionWithSubjectID(searchParams.subjectID);
     personnelData = await fetchPersonnelWithSubjectID(searchParams.subjectID);
   }
