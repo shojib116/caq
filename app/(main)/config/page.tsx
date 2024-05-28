@@ -1,7 +1,10 @@
 import { fetchHeader } from "@/app/lib/data";
 import ConfigPage from "@/app/ui/main/config/config-page";
+import { auth, signIn } from "@/auth";
 
 export default async function Page() {
+  const session = await auth();
+  if (!session?.user) await signIn();
   const headerData = await fetchHeader();
   return (
     <div className="w-full relative">

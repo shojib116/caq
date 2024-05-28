@@ -5,6 +5,7 @@ import {
 } from "@/app/lib/data";
 import QuestionTable from "@/app/ui/main/questions/question-table";
 import SubjectListDropdown from "@/app/ui/main/questions/subject-list-dropdown";
+import { auth, signIn } from "@/auth";
 import { Personnel, Question } from "@prisma/client";
 import { notFound } from "next/navigation";
 
@@ -13,6 +14,8 @@ export default async function Page({
 }: {
   searchParams?: { subjectID?: string };
 }) {
+  const session = await auth();
+  if (!session?.user) await signIn();
   const subjectData = await fetchSubjectsOnly();
   let questionData: Question[] = [];
   let personnelData: Personnel[] = [];

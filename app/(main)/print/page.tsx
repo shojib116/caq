@@ -5,6 +5,7 @@ import {
 } from "@/app/lib/data";
 import { QuestionnaireData } from "@/app/lib/definitions";
 import PrintPage from "@/app/ui/main/print/print-page";
+import { auth, signIn } from "@/auth";
 import { notFound } from "next/navigation";
 
 export default async function Page({
@@ -12,6 +13,8 @@ export default async function Page({
 }: {
   searchParams?: { designation?: string };
 }) {
+  const session = await auth();
+  if (!session?.user) await signIn();
   const personnelData = await fetchPersonnel();
   const headerData = await fetchHeader();
 

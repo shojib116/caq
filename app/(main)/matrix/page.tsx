@@ -1,7 +1,10 @@
 import { fetchPersonnel, fetchSubjects } from "@/app/lib/data";
 import SubjectMatrixTable from "@/app/ui/main/matrix/subject-matrix-table";
+import { auth, signIn } from "@/auth";
 
 export default async function Page() {
+  const session = await auth();
+  if (!session?.user) await signIn();
   const personnelData = await fetchPersonnel();
   const subjectData = await fetchSubjects();
 

@@ -1,6 +1,10 @@
 import Link from "next/link";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
+  const session = await auth();
+  if (session?.user) redirect("/matrix");
   return (
     <div className="w-full h-screen text-center flex flex-col justify-center gap-10">
       <h1 className="text-5xl font-bold">
@@ -16,7 +20,7 @@ export default async function Home() {
       </h1>
       <p className="font-medium">
         To go further, please{" "}
-        <Link href="/signin" className="text-blue-600 underline">
+        <Link href="/api/auth/signin" className="text-blue-600 underline">
           sign in
         </Link>
       </p>

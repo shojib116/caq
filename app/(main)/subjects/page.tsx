@@ -2,12 +2,15 @@ import { AddNewSubject, SubjectPerPage } from "@/app/ui/main/subjects/buttons";
 import Pagination from "@/app/ui/main/subjects/pagination";
 import SubjectList from "@/app/ui/main/subjects/subject-list";
 import { fetchSubjectCount } from "@/app/lib/data";
+import { auth, signIn } from "@/auth";
 
 export default async function Page({
   searchParams,
 }: {
   searchParams?: { show?: string; page?: string };
 }) {
+  const session = await auth();
+  if (!session?.user) await signIn();
   const subjectCount = await fetchSubjectCount();
   const showSubjects = Number(searchParams?.show) || 5;
   const currentPage = Number(searchParams?.page) || 1;

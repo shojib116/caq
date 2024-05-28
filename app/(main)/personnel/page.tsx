@@ -1,7 +1,10 @@
 import AddNewPersonnel from "@/app/ui/main/personnel/add-personnel";
 import PersonnelList from "@/app/ui/main/personnel/personnel-list";
+import { auth, signIn } from "@/auth";
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth();
+  if (!session?.user) await signIn();
   return (
     <div className="w-full relative">
       <div className="flex w-full items-center justify-between">

@@ -17,10 +17,23 @@ const authOptions: NextAuthConfig = {
         },
       },
       from: process.env.EMAIL_FROM,
+      name: "Magic Link",
     }),
   ],
   basePath: BASE_PATH,
   secret: process.env.AUTH_SECRET,
+  callbacks: {
+    async signIn({ user }) {
+      const existingUser = await prisma.user.findUnique({
+        where: { email: user.email! },
+      });
+      if (existingUser) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);
