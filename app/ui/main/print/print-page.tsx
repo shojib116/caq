@@ -57,7 +57,6 @@ export default function PrintPage({
   });
 
   useEffect(() => {
-    setContentTableData(initialContentTableData);
     setTopTableData({
       designation: searchParams?.designation || "",
       name: "",

@@ -46,7 +46,11 @@ export default function AuthorizeUser() {
             Select a role
           </option>
           {RoleMap.map((role) => {
-            return <option value={role.value}>{role.text}</option>;
+            return (
+              <option value={role.value} key={role.value}>
+                {role.text}
+              </option>
+            );
           })}
         </select>
         {selectedRole && (

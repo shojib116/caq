@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
+import React, { useState, useTransition } from "react";
 import Image from "next/image";
 import { FormHeader } from "@prisma/client";
 import { updateHeader } from "@/app/lib/action";
@@ -24,10 +24,6 @@ export default function ConfigPage({
   };
   const [headerTableData, setHeaderTableData] =
     useState<FormHeader>(initialHeaderData);
-
-  useEffect(() => {
-    setHeaderTableData(initialHeaderData);
-  }, []);
 
   const handleHeaderDataChange = (field: string, value: string) => {
     setHeaderTableData((prevHeaderTable) => ({
