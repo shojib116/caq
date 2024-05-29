@@ -5,6 +5,7 @@ import Image from "next/image";
 import { FormHeader } from "@prisma/client";
 import { updateHeader } from "@/app/lib/action";
 import dayjs from "dayjs";
+import Logo from "@/public/logo/Company_Logo.png";
 
 export default function ConfigPage({
   headerData,
@@ -15,7 +16,6 @@ export default function ConfigPage({
 
   const initialHeaderData: FormHeader = {
     id: headerData ? headerData.id : "",
-    logoURL: headerData ? headerData.logoURL : "",
     centerText: headerData ? headerData.centerText : "",
     formNumber: headerData ? headerData.formNumber : "",
     issue: headerData ? headerData.issue : "",
@@ -27,7 +27,6 @@ export default function ConfigPage({
 
   useEffect(() => {
     setHeaderTableData(initialHeaderData);
-    setNewLogoURL(headerData?.logoURL);
   }, []);
 
   const handleHeaderDataChange = (field: string, value: string) => {
@@ -36,54 +35,11 @@ export default function ConfigPage({
       [field]: value,
     }));
   };
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [newLogoURL, setNewLogoURL] = useState<string>();
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedFile(event.target.files ? event.target.files[0] : null);
-    setNewLogoURL(URL.createObjectURL(event.target.files![0]));
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      console.log("No file selected");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    const filename =
-      "Company_logo_" + Date.now() + "." + selectedFile.type.split("/")[1];
-    formData.append("fileName", filename);
-
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (response.ok) {
-      console.log("Image uploaded successfully");
-    } else {
-      console.log("Image upload failed");
-    }
-    return "/uploads/" + filename;
-  };
 
   async function handleInfoSubmit() {
-    const headerLogoURL = (await handleUpload()) || "";
     startTransition(() => {
-      updateHeader(headerTableData, headerLogoURL);
+      updateHeader(headerTableData);
     });
-  }
-
-  function formatDate() {
-    if (!headerTableData.date) return "";
-    const newDate = new Date(headerTableData.date);
-    const formattedDate = `${newDate.getDate()}-${
-      newDate.getMonth() + 1
-    }-${newDate.getFullYear()}`;
-    return formattedDate;
   }
 
   return (
@@ -92,20 +48,6 @@ export default function ConfigPage({
         <h5 className="font-medium">Print Header Information</h5>
         <table className="my-4 text-sm">
           <tbody>
-            <tr>
-              <td className="p-2">
-                <label htmlFor="logo">Logo: </label>
-              </td>
-              <td className="p-2">
-                <input
-                  type="file"
-                  name="logo"
-                  id="logo"
-                  accept="image/png, image/jpeg"
-                  onChange={handleFileChange}
-                />
-              </td>
-            </tr>
             <tr>
               <td className="p-2">
                 <label htmlFor="center-text">Center Text: </label>
@@ -215,15 +157,13 @@ export default function ConfigPage({
           <tbody>
             <tr>
               <td className="border-2 border-gray-600 p-1 text-center w-1/4">
-                {newLogoURL && (
-                  <Image
-                    src={newLogoURL}
-                    alt="logo"
-                    height={60}
-                    width={60}
-                    className="mx-auto"
-                  />
-                )}
+                <Image
+                  src={Logo}
+                  alt="logo"
+                  height={70}
+                  width={70}
+                  className="mx-auto"
+                />
               </td>
               <td className="border-2 border-gray-600 p-1 text-xl font-bold text-center w-2/4">
                 {headerTableData.centerText}

@@ -246,15 +246,11 @@ export async function deletePersonnel(personnelId: string) {
     };
   }
 }
-export async function updateHeader(
-  headerData: FormHeader,
-  headerLogoURL: string
-) {
+export async function updateHeader(headerData: FormHeader) {
   if (headerData.id === "") {
     try {
       await prisma.formHeader.create({
         data: {
-          logoURL: headerLogoURL,
           centerText: headerData.centerText,
           formNumber: headerData.formNumber,
           issue: headerData.issue,
@@ -277,7 +273,6 @@ export async function updateHeader(
           id: headerData.id,
         },
         data: {
-          logoURL: headerLogoURL,
           centerText: headerData.centerText,
           formNumber: headerData.formNumber,
           issue: headerData.issue,

@@ -10,6 +10,7 @@ import "./print-styles.css";
 import { FormHeader } from "@prisma/client";
 import Image from "next/image";
 import dayjs from "dayjs";
+import Logo from "@/public/logo/Company_Logo.png";
 
 export default function PrintableDocument({
   tableRef,
@@ -41,15 +42,13 @@ export default function PrintableDocument({
           <tbody>
             <tr>
               <td className="border-2 border-gray-600 p-1 text-center w-1/4">
-                {headerData?.logoURL && (
-                  <Image
-                    src={headerData.logoURL}
-                    alt="logo"
-                    height={60}
-                    width={60}
-                    className="mx-auto"
-                  />
-                )}
+                <Image
+                  src={Logo}
+                  alt="logo"
+                  height={70}
+                  width={70}
+                  className="mx-auto"
+                />
               </td>
               <td className="border-2 border-gray-600 p-1 text-xl font-bold text-center w-2/4">
                 {headerData?.centerText}
@@ -158,7 +157,7 @@ export default function PrintableDocument({
                   <tbody>
                     {contentTableData.map((subject) => {
                       return (
-                        <tr key={subject.id} className="unbreakable">
+                        <tr key={subject.id}>
                           <td className="font-medium border-2 border-gray-600 p-2">
                             <h5 className="mb-1">{subject.text}</h5>
                             <ul>

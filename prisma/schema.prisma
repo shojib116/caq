@@ -40,7 +40,6 @@ model Personnel {
 
 model FormHeader {
   id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  logoURL       String
   centerText    String
   formNumber    String?
   issue         String?
