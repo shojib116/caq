@@ -1,6 +1,11 @@
 import { fetchPersonnel, fetchSubjects } from "@/app/lib/data";
 import SubjectMatrixTable from "@/app/ui/main/matrix/subject-matrix-table";
 import { auth, signIn } from "@/auth";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Competence Assessment Matrix | CAQ",
+};
 
 export default async function Page() {
   const session = await auth();

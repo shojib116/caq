@@ -4,6 +4,11 @@ import SubjectList from "@/app/ui/main/subjects/subject-list";
 import { fetchSubjectCount } from "@/app/lib/data";
 import { auth, signIn } from "@/auth";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Subject List | CAQ",
+};
 
 export default async function Page({
   searchParams,

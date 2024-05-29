@@ -1,7 +1,12 @@
 import AddNewPersonnel from "@/app/ui/main/personnel/add-personnel";
 import PersonnelList from "@/app/ui/main/personnel/personnel-list";
 import { auth, signIn } from "@/auth";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Personnel List | CAQ",
+};
 
 export default async function Page() {
   const session = await auth();

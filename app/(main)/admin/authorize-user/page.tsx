@@ -1,7 +1,13 @@
 import AuthorizeUser from "@/app/ui/main/admin/authotize-user";
 import Breadcrumbs from "@/app/ui/main/subjects/breadcrumbs";
 import { auth, signIn } from "@/auth";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Authorize User | CAQ",
+};
+
 export default async function AuthorizeUserPage() {
   const session = await auth();
 

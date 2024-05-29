@@ -3,7 +3,12 @@ import AddSubject from "@/app/ui/main/subjects/add-subject";
 import Breadcrumbs from "@/app/ui/main/subjects/breadcrumbs";
 import { auth, signIn } from "@/auth";
 import { Personnel } from "@prisma/client";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Add Subject | CAQ",
+};
 
 export default async function Page() {
   const session = await auth();

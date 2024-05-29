@@ -7,7 +7,12 @@ import QuestionTable from "@/app/ui/main/questions/question-table";
 import SubjectListDropdown from "@/app/ui/main/questions/subject-list-dropdown";
 import { auth, signIn } from "@/auth";
 import { Personnel, Question } from "@prisma/client";
+import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Question Pool | CAQ",
+};
 
 export default async function Page({
   searchParams,

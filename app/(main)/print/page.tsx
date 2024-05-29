@@ -6,7 +6,12 @@ import {
 import { QuestionnaireData } from "@/app/lib/definitions";
 import PrintPage from "@/app/ui/main/print/print-page";
 import { auth, signIn } from "@/auth";
+import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Print Questionnaire | CAQ",
+};
 
 export default async function Page({
   searchParams,

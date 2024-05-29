@@ -1,7 +1,12 @@
 import { fetchUsers } from "@/app/lib/data";
 import AdminPage from "@/app/ui/main/admin/admin-page";
 import { auth, signIn } from "@/auth";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Admin Page | CAQ",
+};
 
 export default async function Page() {
   const users = await fetchUsers();
