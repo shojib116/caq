@@ -140,3 +140,14 @@ export async function fetchHeader() {
     throw new Error("Failed to fetch header info");
   }
 }
+
+export async function fetchUsers() {
+  try {
+    const data = await prisma.user.findMany();
+
+    return data;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw new Error("Failed to fetch user info");
+  }
+}

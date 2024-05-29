@@ -6,7 +6,7 @@ import {
 import { QuestionnaireData } from "@/app/lib/definitions";
 import PrintPage from "@/app/ui/main/print/print-page";
 import { auth, signIn } from "@/auth";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function Page({
   searchParams,
@@ -15,6 +15,12 @@ export default async function Page({
 }) {
   const session = await auth();
   if (!session?.user) await signIn();
+  if (
+    session?.user.role !== "admin" &&
+    session?.user.role !== "sme" &&
+    session?.user.role !== "assessor"
+  )
+    redirect("/matrix");
   const personnelData = await fetchPersonnel();
   const headerData = await fetchHeader();
 

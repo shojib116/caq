@@ -1,9 +1,10 @@
 "use server";
 
 import prisma from "@/app/lib/prisma";
-import { FormHeader, Personnel } from "@prisma/client";
+import { FormHeader } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 export async function addSubject(subject: string, personnelIDs: string[]) {
   try {
@@ -293,4 +294,69 @@ export async function updateHeader(
       };
     }
   }
+}
+
+const userSchema = z.object({
+  email: z.string().email({ message: "Please enter a valid email" }),
+  role: z.string({ invalid_type_error: "Please select a role" }),
+});
+
+export type UserState = {
+  errors?: {
+    email?: string[];
+    role?: string[];
+  };
+  message?: string | null;
+};
+
+export async function authorizeUser(
+  prevState: UserState | undefined,
+  formData: FormData
+) {
+  const parsedData = userSchema.safeParse({
+    email: formData.get("email"),
+    role: formData.get("role"),
+  });
+
+  if (!parsedData.success) {
+    return {
+      errors: parsedData.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to create user",
+    };
+  }
+
+  const { email, role } = parsedData.data;
+
+  try {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (!existingUser) {
+      await prisma.user.create({
+        data: {
+          email,
+          role,
+        },
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to create user",
+    };
+  }
+  revalidatePath("/admin");
+  redirect("/admin");
+}
+
+export async function deleteUser(id: string) {
+  try {
+    await prisma.user.delete({
+      where: { id },
+    });
+  } catch (error) {
+    console.error(error);
+    return {
+      message: "Database Error: Failed to delete user",
+    };
+  }
+  revalidatePath("/admin");
 }

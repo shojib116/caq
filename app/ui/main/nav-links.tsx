@@ -13,21 +13,47 @@ import { usePathname } from "next/navigation";
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
-const links = [
-  { name: "Personnel List", href: "/personnel", icon: UserCircleIcon },
-  { name: "Subject List", href: "/subjects", icon: ClipboardDocumentListIcon },
-  { name: "Question Pool", href: "/questions", icon: QuestionMarkCircleIcon },
+const LinksMap = [
+  {
+    name: "Personnel List",
+    href: "/personnel",
+    icon: UserCircleIcon,
+    role: ["admin"],
+  },
+  {
+    name: "Subject List",
+    href: "/subjects",
+    icon: ClipboardDocumentListIcon,
+    role: ["admin"],
+  },
+
   {
     name: "Competence Assessment Matrix",
     href: "/matrix",
     icon: ClipboardDocumentCheckIcon,
+    role: ["admin", "sme", "assessor"],
   },
-  { name: "Print Questionnaire", href: "/print", icon: PrinterIcon },
-  { name: "Cofiguration", href: "/config", icon: WrenchIcon },
+  {
+    name: "Question Pool",
+    href: "/questions",
+    icon: QuestionMarkCircleIcon,
+    role: ["admin", "sme"],
+  },
+  {
+    name: "Print Questionnaire",
+    href: "/print",
+    icon: PrinterIcon,
+    role: ["admin", "sme", "assessor"],
+  },
+  { name: "Cofiguration", href: "/config", icon: WrenchIcon, role: ["admin"] },
 ];
 
-export default function NavLinks() {
+export default function NavLinks({ role }: { role: string }) {
   const pathname = usePathname();
+  const links = LinksMap.filter((link) => {
+    if (link.role.indexOf(role) === -1) return false;
+    return true;
+  });
   return (
     <>
       {links.map((link) => {

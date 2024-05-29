@@ -33,6 +33,16 @@ const authOptions: NextAuthConfig = {
         return false;
       }
     },
+    async jwt({ token, user }) {
+      if (user) token.role = user.role;
+      return token;
+    },
+    async session({ session, token }) {
+      if (token?.role) {
+        session.user.role = token.role as string; // Ensure token.role is correctly typed
+      }
+      return session;
+    },
   },
 };
 

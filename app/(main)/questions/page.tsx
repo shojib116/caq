@@ -7,7 +7,7 @@ import QuestionTable from "@/app/ui/main/questions/question-table";
 import SubjectListDropdown from "@/app/ui/main/questions/subject-list-dropdown";
 import { auth, signIn } from "@/auth";
 import { Personnel, Question } from "@prisma/client";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export default async function Page({
   searchParams,
@@ -16,6 +16,9 @@ export default async function Page({
 }) {
   const session = await auth();
   if (!session?.user) await signIn();
+  if (session?.user.role !== "admin" && session?.user.role !== "sme")
+    redirect("/matrix");
+
   const subjectData = await fetchSubjectsOnly();
   let questionData: Question[] = [];
   let personnelData: Personnel[] = [];
